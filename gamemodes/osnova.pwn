@@ -36,7 +36,7 @@ main()
 #include <Pawn.Regex>
 #include <TOTP>
 #include <geolocation> // В следущем обновление обновлю систему.
-//#include <nex-ac> // Anti Cheat
+#include <nex-ac> // Anti Cheat
 #include <SKY> // Для работы с W-C
 #include <weapon-config> // Сам W-C
 #include <crashdetect>
@@ -52,15 +52,15 @@ main()
 #endif
 #define MAX_PLAYERS 50
 
-#define SQL_HOST  				!""
-#define SQL_USER  				!""
+#define SQL_HOST  				!"localhost"
+#define SQL_USER  				!"root"
 #define SQL_PASS  				!""
-#define SQL_BASE 		 		!""
+#define SQL_BASE 		 		!"montana"
 
 #define SERVER_NAME 			"Osnova RolePlay"
 #define SERVER_NAME2			"Osnova"
 #define SERVER_NAME3			"O-RP"
-#define SERVER_VER 				!"O-RP v0.03>v.0.04B"
+#define SERVER_VER 				!"O-RP v.0.04B>v0.05.1A"
 
 #define MAX_ADMINS 				10 // Если собираетесь дорабатывать мод, меняйте до 50-100 (Самое оптимальное).
 #define DELAY_TO_KICK 			1250 // 1.2 сек на кик игрока, лучше не изменять если не понимаете к чему это!
@@ -90,7 +90,7 @@ new Text:GraphicPIN_TD;
 new Text:LOGO[5];  
 new PlayerText:GraphicPIN_PTD[MAX_PLAYERS][4];
 
-static pPickupID[MAX_PLAYERS]; // Фикса флуда пикапами
+static pPickupID[MAX_PLAYERS]; 
 new PlayerAFK[MAX_PLAYERS];
 new expmultiply = 4;
 new LoginTimer[MAX_PLAYERS];
@@ -203,601 +203,15 @@ public OnGameModeInit()
 	return true;
 }
 
-stock KickEx(playerid, delay = DELAY_TO_KICK)
-{
-	if(!IsPlayerConnected(playerid)) return false;
-	SetTimerEx(!"KickPlayer", delay, false, !"d", playerid);
-	return false;
-}
-
-function: KickPlayer(playerid) Kick(playerid);
-
-stock LoadMapping()
-{
-	new map_spawn;
-	map_spawn = CreateObject(5033, 1745.199951, -1882.849975, 26.140600, 0.000000, 0.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 2, 16640, "a51", "concreteyellow256 copy", 0xFFFFFFFF);
-	SetObjectMaterial(map_spawn, 3, 9901, "ferry_building", "skylight_windows", 0x00000000);
-	SetObjectMaterial(map_spawn, 5, 10765, "airportgnd_sfse", "white", 0x00000000);
-	SetObjectMaterial(map_spawn, 6, 16640, "a51", "concreteyellow256 copy", 0x00000000);
-	SetObjectMaterial(map_spawn, 7, 9901, "ferry_building", "skylight_windows", 0x00000000);
-	SetObjectMaterial(map_spawn, 9, 6404, "beafron1_law2", "woodroof01_128", 0x00000000);
-	map_spawn = CreateObject(4821, 1745.199951, -1882.849975, 26.140600, 0.000000, 0.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 2, 4830, "airport2", "bathtile01_int", 0x00000000);
-	SetObjectMaterial(map_spawn, 5, 4552, "ammu_lan2", "sl_lavicdtwall1", 0x00000000);
-	SetObjectMaterial(map_spawn, 7, 10765, "airportgnd_sfse", "ws_runwaytarmac", 0x00000000);
-	SetObjectMaterial(map_spawn, 8, 7555, "bballcpark1", "ws_carparknew2", 0x00000000);
-	SetObjectMaterial(map_spawn, 9, 4829, "airport_las", "sjmlahus28", 0x00000000);
-	SetObjectMaterial(map_spawn, 10, 9514, "711_sfw", "mono2_sfe", 0x00000000);
-	map_spawn = CreateObject(19399, 1793.759155, -1891.440307, 10.823890, 0.000000, -0.000030, 179.999816, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1793.759155, -1894.499511, 10.823890, 0.000000, -0.000030, 179.999816, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1793.759155, -1897.699218, 10.823890, 0.000000, -0.000030, 179.999816, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1793.759155, -1900.909423, 10.823890, 0.000000, -0.000038, 179.999771, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1793.759155, -1904.118774, 10.823890, 0.000000, -0.000038, 179.999771, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1793.759155, -1907.318481, 10.823890, 0.000000, -0.000038, 179.999771, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1793.759155, -1910.508666, 10.823890, 0.000000, -0.000045, 179.999725, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1793.759155, -1913.718017, 10.823890, 0.000000, -0.000045, 179.999725, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1793.759155, -1916.917724, 10.823890, 0.000000, -0.000045, 179.999725, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1793.759155, -1920.116699, 10.823890, 0.000000, -0.000053, 179.999679, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1793.759155, -1923.145874, 10.823890, 0.000000, -0.000053, 179.999679, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1787.526855, -1891.440307, 10.823890, 0.000000, -0.000045, 179.999725, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1787.526855, -1894.499511, 10.823890, 0.000000, -0.000045, 179.999725, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1787.526855, -1897.699218, 10.823890, 0.000000, -0.000045, 179.999725, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1787.526855, -1900.909423, 10.823890, 0.000000, -0.000053, 179.999679, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1787.526855, -1904.118774, 10.823890, 0.000000, -0.000053, 179.999679, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1787.526855, -1907.318481, 10.823890, 0.000000, -0.000053, 179.999679, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1787.526855, -1910.508666, 10.823890, 0.000000, -0.000061, 179.999633, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1787.526855, -1913.718017, 10.823890, 0.000000, -0.000061, 179.999633, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1787.526855, -1916.917724, 10.823890, 0.000000, -0.000061, 179.999633, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1787.526855, -1920.116699, 10.823890, 0.000000, -0.000068, 179.999588, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1787.526855, -1923.145874, 10.823890, 0.000000, -0.000068, 179.999588, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1792.240234, -1889.920288, 10.813890, 0.000007, 0.000000, 89.999977, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1789.030517, -1889.920288, 10.813890, 0.000007, 0.000000, 89.999977, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1792.240234, -1924.692871, 10.813890, 0.000022, 0.000000, 89.999931, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19399, 1789.030517, -1924.692871, 10.813890, 0.000022, 0.000000, 89.999931, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1890.801025, 12.415001, 0.000000, 90.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1890.801025, 12.395001, 0.000000, 90.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1892.351196, 12.415001, 0.000000, 90.000015, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1892.351196, 12.395001, 0.000000, 90.000015, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1893.871826, 12.415001, 0.000000, 90.000022, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1893.871826, 12.395001, 0.000000, 90.000022, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1895.373046, 12.415001, 0.000000, 90.000030, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1895.373046, 12.395001, 0.000000, 90.000030, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1896.943359, 12.415001, 0.000000, 90.000038, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1896.943359, 12.395001, 0.000000, 90.000038, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1898.523193, 12.415001, 0.000000, 90.000045, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1898.523193, 12.395001, 0.000000, 90.000045, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1900.053466, 12.415001, 0.000000, 90.000053, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1900.053466, 12.395001, 0.000000, 90.000053, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1901.634033, 12.415001, 0.000000, 90.000061, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1901.634033, 12.395001, 0.000000, 90.000061, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1903.185058, 12.415001, 0.000000, 90.000068, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1903.185058, 12.395001, 0.000000, 90.000068, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1904.774291, 12.415001, 0.000000, 90.000083, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1904.774291, 12.395001, 0.000000, 90.000083, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1906.354125, 12.415001, 0.000000, 90.000091, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1906.354125, 12.395001, 0.000000, 90.000091, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1907.934448, 12.415001, 0.000000, 90.000076, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1907.934448, 12.395001, 0.000000, 90.000076, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1909.523681, 12.415001, 0.000000, 90.000091, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1909.523681, 12.395001, 0.000000, 90.000091, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1911.103515, 12.415001, 0.000000, 90.000099, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1911.103515, 12.395001, 0.000000, 90.000099, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1912.684692, 12.415001, 0.000000, 90.000083, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1912.684692, 12.395001, 0.000000, 90.000083, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1914.273925, 12.415001, 0.000000, 90.000099, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1914.273925, 12.395001, 0.000000, 90.000099, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1915.853759, 12.415001, 0.000000, 90.000106, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1915.853759, 12.395001, 0.000000, 90.000106, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1917.424438, 12.415001, 0.000000, 90.000091, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1917.424438, 12.395001, 0.000000, 90.000091, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1919.013671, 12.415001, 0.000000, 90.000106, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1919.013671, 12.395001, 0.000000, 90.000106, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1920.593505, 12.415001, 0.000000, 90.000114, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1920.593505, 12.395001, 0.000000, 90.000114, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1922.194824, 12.415001, 0.000000, 90.000114, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1922.194824, 12.395001, 0.000000, 90.000114, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1791.962036, -1923.774658, 12.415001, 0.000000, 90.000122, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(19430, 1789.321166, -1923.774658, 12.395001, 0.000000, 90.000122, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
-	map_spawn = CreateObject(970, 1809.586669, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1805.426879, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1801.266357, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1797.105834, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1792.965820, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1784.684692, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1788.845581, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1780.545288, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1776.406616, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1774.305297, -1886.370849, 13.100625, 0.000000, 0.000000, 90.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1774.305297, -1890.531372, 13.100625, 0.000000, 0.000000, 90.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1774.305297, -1896.791625, 13.100625, 0.000000, 0.000000, 90.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1774.305297, -1903.251831, 13.100625, 0.000000, 0.000000, 90.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1774.305297, -1907.412353, 13.100625, 0.000000, 0.000000, 90.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1774.305297, -1919.474975, 13.100625, 0.000000, 0.000000, 90.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1774.305297, -1931.514770, 13.100625, 0.000000, 0.000000, 90.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1774.305297, -1933.584594, 13.100625, 0.000000, 0.000000, 90.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1776.366821, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1780.517211, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1784.688354, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1788.828979, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1792.969848, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1797.110473, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1801.261230, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1804.701171, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1806.802612, -1933.633789, 13.100625, 0.000000, 0.000000, 270.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1806.802612, -1929.503173, 13.100625, 0.000000, 0.000000, 270.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1806.802612, -1925.372436, 13.100625, 0.000000, 0.000000, 270.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1806.802612, -1921.241943, 13.100625, 0.000000, 0.000000, 270.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1806.802612, -1917.111083, 13.100625, 0.000000, 0.000000, 270.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1806.802612, -1913.011108, 13.100625, 0.000000, 0.000000, 270.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1806.802612, -1908.900878, 13.100625, 0.000000, 0.000000, 270.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1806.802612, -1904.770629, 13.100625, 0.000000, 0.000000, 270.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1806.802612, -1901.370971, 13.100625, 0.000000, 0.000000, 270.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(970, 1807.874877, -1897.508911, 13.100625, 0.000000, 0.000000, -120.900039, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
-	SetObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
-	map_spawn = CreateObject(19377, 1770.328735, -1883.590087, 19.347818, 0.000000, 0.000000, 90.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10765, "airportgnd_sfse", "white", 0xFFFFFFFF);
-	SetObjectMaterial(map_spawn, 5, -1, "none", "none", 0xFFFFFFFF);
-	map_spawn = CreateObject(19377, 1757.208496, -1883.600097, 19.297822, 0.000000, 0.000000, 90.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 10765, "airportgnd_sfse", "white", 0x00000000);
-	SetObjectMaterial(map_spawn, 5, 14668, "711c", "forumstand1_LAe", 0x00000000);
-	map_spawn = CreateObject(19377, 1742.139282, -1864.908569, 20.338226, 0.000000, 0.000000, 90.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 9901, "ferry_building", "skylight_windows", 0x00000000);
-	map_spawn = CreateObject(19477, 1763.468017, -1883.767822, 16.166734, 0.000000, 0.000000, 270.000000, 2000.00); 
-	SetObjectMaterialText(map_spawn, "Los Santos", 0, 120, "Calibri", 100, 1, 0xFFFFFFFF, 0x00000000, 1);
-	map_spawn = CreateObject(19477, 1763.433959, -1883.731689, 16.135526, 0.000000, 0.000000, 90.000000, 2000.00); 
-	SetObjectMaterial(map_spawn, 0, 19962, "samproadsigns", "streetsign", 0x00000000);
-	/////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////
-	map_spawn = CreateObject(4853, 1735.969970, -1951.219970, 15.050000, 356.859985, 0.000000, 0.140000, 2000.00); 
-	map_spawn = CreateObject(19399, 1810.049072, -1889.770141, 10.663887, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(19426, 1800.661743, -1889.771484, 10.665992, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1806.839233, -1889.770141, 10.663887, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1803.629272, -1889.770141, 10.663887, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(19426, 1798.441284, -1889.771484, 10.665992, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1795.410156, -1889.770141, 10.663887, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1792.240234, -1889.770141, 10.663887, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1789.030517, -1889.770141, 10.663887, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1787.359985, -1891.290161, 10.663887, 0.000000, 0.000000, 180.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1787.359985, -1894.499511, 10.663887, 0.000000, 0.000000, 180.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1787.359985, -1897.699218, 10.663887, 0.000000, 0.000000, 180.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1787.359985, -1900.909423, 10.663887, 0.000000, -0.000007, 179.999954, 2000.00); 
-	map_spawn = CreateObject(19399, 1787.359985, -1904.118774, 10.663887, 0.000000, -0.000007, 179.999954, 2000.00); 
-	map_spawn = CreateObject(19399, 1787.359985, -1907.318481, 10.663887, 0.000000, -0.000007, 179.999954, 2000.00); 
-	map_spawn = CreateObject(19399, 1787.359985, -1910.508666, 10.663887, 0.000000, -0.000015, 179.999908, 2000.00); 
-	map_spawn = CreateObject(19399, 1787.359985, -1913.718017, 10.663887, 0.000000, -0.000015, 179.999908, 2000.00); 
-	map_spawn = CreateObject(19399, 1787.359985, -1916.917724, 10.663887, 0.000000, -0.000015, 179.999908, 2000.00); 
-	map_spawn = CreateObject(19399, 1787.359985, -1920.116699, 10.663887, 0.000000, -0.000022, 179.999862, 2000.00); 
-	map_spawn = CreateObject(19399, 1787.359985, -1923.326049, 10.663887, 0.000000, -0.000022, 179.999862, 2000.00); 
-	map_spawn = CreateObject(19399, 1792.260253, -1924.833740, 10.663887, 0.000007, 0.000000, 89.999977, 2000.00); 
-	map_spawn = CreateObject(19399, 1789.050537, -1924.833740, 10.663887, 0.000007, 0.000000, 89.999977, 2000.00); 
-	map_spawn = CreateObject(19399, 1793.939331, -1891.450317, 10.663887, 0.000000, -0.000015, 179.999908, 2000.00); 
-	map_spawn = CreateObject(19399, 1793.939331, -1894.499511, 10.663887, 0.000000, -0.000015, 179.999908, 2000.00); 
-	map_spawn = CreateObject(19399, 1793.939331, -1897.699218, 10.663887, 0.000000, -0.000015, 179.999908, 2000.00); 
-	map_spawn = CreateObject(19399, 1793.939331, -1900.909423, 10.663887, 0.000000, -0.000022, 179.999862, 2000.00); 
-	map_spawn = CreateObject(19399, 1793.939331, -1904.118774, 10.663887, 0.000000, -0.000022, 179.999862, 2000.00); 
-	map_spawn = CreateObject(19399, 1793.939331, -1907.318481, 10.663887, 0.000000, -0.000022, 179.999862, 2000.00); 
-	map_spawn = CreateObject(19399, 1793.939331, -1910.508666, 10.663887, 0.000000, -0.000030, 179.999816, 2000.00); 
-	map_spawn = CreateObject(19399, 1793.939331, -1913.718017, 10.663887, 0.000000, -0.000030, 179.999816, 2000.00); 
-	map_spawn = CreateObject(19399, 1793.939331, -1916.917724, 10.663887, 0.000000, -0.000030, 179.999816, 2000.00); 
-	map_spawn = CreateObject(19399, 1793.939331, -1920.116699, 10.663887, 0.000000, -0.000038, 179.999771, 2000.00); 
-	map_spawn = CreateObject(19399, 1793.939331, -1923.326049, 10.663887, 0.000000, -0.000038, 179.999771, 2000.00); 
-	map_spawn = CreateObject(738, 1790.949218, -1892.332153, 12.525765, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(738, 1790.949218, -1900.103515, 12.525765, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(738, 1790.949218, -1908.074462, 12.525765, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(738, 1790.949218, -1915.724365, 12.525765, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(738, 1790.949218, -1922.793945, 12.525765, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(870, 1791.737426, -1905.977294, 12.730065, 0.000000, 0.000015, 0.000000, 2000.00); 
-	map_spawn = CreateObject(870, 1789.365966, -1904.137207, 12.730065, 0.000007, -0.000013, 152.299896, 2000.00); 
-	map_spawn = CreateObject(870, 1791.996826, -1901.879638, 12.730065, 0.000007, -0.000013, 152.299896, 2000.00); 
-	map_spawn = CreateObject(870, 1789.636108, -1894.094848, 12.730065, 0.000000, 0.000015, 179.699859, 2000.00); 
-	map_spawn = CreateObject(870, 1791.997924, -1895.947265, 12.730065, 0.000007, -0.000013, -28.000148, 2000.00); 
-	map_spawn = CreateObject(870, 1789.355224, -1898.191162, 12.730065, 0.000007, -0.000013, -28.000148, 2000.00); 
-	map_spawn = CreateObject(870, 1789.636108, -1909.554687, 12.730065, 0.000000, 0.000007, 179.699813, 2000.00); 
-	map_spawn = CreateObject(870, 1791.997924, -1911.407104, 12.730065, 0.000003, -0.000006, -28.000148, 2000.00); 
-	map_spawn = CreateObject(870, 1789.355224, -1913.651000, 12.730065, 0.000003, -0.000006, -28.000148, 2000.00); 
-	map_spawn = CreateObject(870, 1791.737426, -1921.236450, 12.730065, 0.000000, 0.000022, 0.000000, 2000.00); 
-	map_spawn = CreateObject(870, 1789.365966, -1919.396362, 12.730065, 0.000010, -0.000020, 152.299865, 2000.00); 
-	map_spawn = CreateObject(870, 1791.996826, -1917.138793, 12.730065, 0.000010, -0.000020, 152.299865, 2000.00); 
-	map_spawn = CreateObject(870, 1792.328247, -1891.898803, 12.730065, 0.000000, 0.000015, 179.699859, 2000.00); 
-	map_spawn = CreateObject(870, 1789.067871, -1922.909423, 12.730065, 0.000010, -0.000020, 152.299865, 2000.00); 
-	map_spawn = CreateObject(1257, 1772.523071, -1924.336791, 13.780218, 0.000000, 0.000000, 180.000000, 2000.00); 
-	map_spawn = CreateObject(1257, 1772.523071, -1914.682128, 13.780218, 0.000000, -0.000007, 179.999954, 2000.00); 
-	map_spawn = CreateObject(19399, 1775.959594, -1928.577026, 10.663887, -0.000007, -0.000022, -90.000099, 2000.00); 
-	map_spawn = CreateObject(19399, 1777.639526, -1927.066162, 10.663887, 0.000000, -0.000015, -0.000122, 2000.00); 
-	map_spawn = CreateObject(19399, 1777.639526, -1923.895751, 10.663887, 0.000000, -0.000015, -0.000122, 2000.00); 
-	map_spawn = CreateObject(19399, 1777.639526, -1922.025878, 10.663887, 0.000000, -0.000015, -0.000122, 2000.00); 
-	map_spawn = CreateObject(19399, 1775.959594, -1920.506835, 10.663887, -0.000007, -0.000022, -90.000099, 2000.00); 
-	map_spawn = CreateObject(19399, 1775.959594, -1918.654296, 10.663887, -0.000022, -0.000022, -90.000053, 2000.00); 
-	map_spawn = CreateObject(19399, 1777.639526, -1917.143432, 10.663887, -0.000000, 0.000000, -0.000122, 2000.00); 
-	map_spawn = CreateObject(19399, 1777.639526, -1913.973022, 10.663887, -0.000000, 0.000000, -0.000122, 2000.00); 
-	map_spawn = CreateObject(19399, 1777.639526, -1912.103149, 10.663887, -0.000000, 0.000000, -0.000122, 2000.00); 
-	map_spawn = CreateObject(19399, 1775.959594, -1910.584106, 10.663887, -0.000022, -0.000022, -90.000053, 2000.00); 
-	map_spawn = CreateObject(19399, 1775.994140, -1919.594116, 10.663887, -0.000022, -0.000022, -54.600097, 2000.00); 
-	map_spawn = CreateObject(19399, 1777.639526, -1919.693481, 10.663887, -0.000000, 0.000000, -0.000122, 2000.00); 
-	map_spawn = CreateObject(1232, 1790.903442, -1919.114013, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1790.903442, -1912.003417, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1790.903442, -1904.072753, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1790.903442, -1896.202270, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1773.703369, -1896.902954, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1773.703369, -1885.640869, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1773.703369, -1907.551025, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1773.703369, -1919.491821, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1773.703369, -1932.632568, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1784.582397, -1935.983764, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1800.352172, -1935.983764, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1807.192382, -1925.412231, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1807.192382, -1913.182250, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1807.192382, -1903.491943, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1807.192382, -1883.882324, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1232, 1793.901489, -1883.882324, 15.068397, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1810.049072, -1855.069335, 10.663887, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1806.849853, -1855.069335, 10.663887, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1803.639892, -1855.069335, 10.663887, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1800.450561, -1855.069335, 10.663887, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(19399, 1797.269165, -1855.069335, 10.663887, 0.000007, 0.000000, 89.999977, 2000.00); 
-	map_spawn = CreateObject(19399, 1794.069946, -1855.069335, 10.663887, 0.000007, 0.000000, 89.999977, 2000.00); 
-	map_spawn = CreateObject(19399, 1790.859985, -1855.069335, 10.663887, 0.000007, 0.000000, 89.999977, 2000.00); 
-	map_spawn = CreateObject(19399, 1787.670654, -1855.069335, 10.663887, 0.000007, 0.000000, 89.999977, 2000.00); 
-	map_spawn = CreateObject(19399, 1784.459106, -1855.069335, 10.663887, 0.000015, 0.000000, 89.999954, 2000.00); 
-	map_spawn = CreateObject(19399, 1781.259887, -1855.069335, 10.663887, 0.000015, 0.000000, 89.999954, 2000.00); 
-	map_spawn = CreateObject(19399, 1778.049926, -1855.069335, 10.663887, 0.000015, 0.000000, 89.999954, 2000.00); 
-	map_spawn = CreateObject(19399, 1774.860595, -1855.069335, 10.663887, 0.000015, 0.000000, 89.999954, 2000.00); 
-	map_spawn = CreateObject(19399, 1771.659667, -1855.069335, 10.663887, 0.000022, 0.000000, 89.999931, 2000.00); 
-	map_spawn = CreateObject(19399, 1768.460449, -1855.069335, 10.663887, 0.000022, 0.000000, 89.999931, 2000.00); 
-	map_spawn = CreateObject(19399, 1765.250488, -1855.069335, 10.663887, 0.000022, 0.000000, 89.999931, 2000.00); 
-	map_spawn = CreateObject(19399, 1762.061157, -1855.069335, 10.663887, 0.000022, 0.000000, 89.999931, 2000.00); 
-	map_spawn = CreateObject(19399, 1758.880004, -1855.069335, 10.663887, 0.000030, 0.000000, 89.999908, 2000.00); 
-	map_spawn = CreateObject(19399, 1755.680786, -1855.069335, 10.663887, 0.000030, 0.000000, 89.999908, 2000.00); 
-	map_spawn = CreateObject(19399, 1752.470825, -1855.069335, 10.663887, 0.000030, 0.000000, 89.999908, 2000.00); 
-	map_spawn = CreateObject(19399, 1749.281494, -1855.069335, 10.663887, 0.000030, 0.000000, 89.999908, 2000.00); 
-	map_spawn = CreateObject(19399, 1746.071166, -1855.069335, 10.663887, 0.000038, 0.000000, 89.999885, 2000.00); 
-	map_spawn = CreateObject(19399, 1742.871948, -1855.069335, 10.663887, 0.000038, 0.000000, 89.999885, 2000.00); 
-	map_spawn = CreateObject(19399, 1739.661987, -1855.069335, 10.663887, 0.000038, 0.000000, 89.999885, 2000.00); 
-	map_spawn = CreateObject(19399, 1736.472656, -1855.069335, 10.663887, 0.000038, 0.000000, 89.999885, 2000.00); 
-	map_spawn = CreateObject(19399, 1732.119506, -1855.069335, 10.663887, 0.000045, 0.000000, 89.999862, 2000.00); 
-	map_spawn = CreateObject(19399, 1727.759155, -1855.069335, 10.663887, 0.000045, 0.000000, 89.999862, 2000.00); 
-	map_spawn = CreateObject(1346, 1771.640869, -1904.566894, 13.998662, 0.000000, 0.000000, 270.000000, 2000.00); 
-	map_spawn = CreateObject(1285, 1768.602661, -1906.901855, 13.110745, 0.000000, 0.000007, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1286, 1768.141723, -1906.896362, 13.132098, 0.000000, 0.000007, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1287, 1767.648681, -1906.875366, 13.142859, 0.000000, 0.000007, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1288, 1767.169799, -1906.849487, 13.153707, 0.000000, 0.000007, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1340, 1758.583984, -1904.406494, 13.609810, 0.000000, 0.000000, 68.800003, 2000.00); 
-	map_spawn = CreateObject(3862, 1765.959106, -1911.598022, 13.729010, 0.000000, 0.000000, 270.000000, 2000.00); 
-	map_spawn = CreateObject(3862, 1765.959106, -1916.348388, 13.729010, 0.000000, 0.000000, 270.000000, 2000.00); 
-	map_spawn = CreateObject(3861, 1765.919189, -1921.492553, 13.736182, 0.000000, 0.000000, 270.000000, 2000.00); 
-	map_spawn = CreateObject(1215, 1759.748535, -1910.183105, 13.146018, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1215, 1759.748535, -1913.923339, 13.146018, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1215, 1759.748535, -1920.393554, 13.146018, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1215, 1759.748535, -1928.132934, 13.146018, 0.000000, 0.000000, 0.000000, 2000.00); 
-	map_spawn = CreateObject(1342, 1761.989257, -1904.847167, 13.603018, 0.000000, 0.000000, 88.800025, 2000.00); 
-	map_spawn = CreateObject(1341, 1764.408447, -1905.113769, 13.444880, 0.000000, 0.000000, 89.800018, 2000.00); 
-	map_spawn = CreateObject(19324, 1771.722167, -1903.599121, 13.189965, 0.000000, 0.000000, 180.000000, 2000.00); 
-	map_spawn = CreateObject(638, 1759.223510, -1885.116943, 13.255992, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(638, 1755.513427, -1885.116943, 13.255992, 0.000000, 0.000000, 90.000000, 2000.00); 
-	map_spawn = CreateObject(638, 1771.663940, -1885.116943, 13.255992, 0.000007, 0.000000, 89.999977, 2000.00); 
-	map_spawn = CreateObject(638, 1767.953857, -1885.116943, 13.255992, 0.000007, 0.000000, 89.999977, 2000.00); 
-}
-
-stock LoadTextDraws()
-{
-    LOGO[0] = TextDrawCreate(551.500000, -4.355563, "hud:radarringplane"); 
-	TextDrawLetterSize(LOGO[0], 0.000000, 0.000000); 
-	TextDrawTextSize(LOGO[0], 19.500000, 28.622177); 
-	TextDrawAlignment(LOGO[0], 1); 
-	TextDrawColor(LOGO[0], -16776961); 
-	TextDrawSetShadow(LOGO[0], 0); 
-	TextDrawSetOutline(LOGO[0], 0); 
-	TextDrawBackgroundColor(LOGO[0], -16776961); 
-	TextDrawFont(LOGO[0], 4); 
-
-	LOGO[1] = TextDrawCreate(556.000000, 8.088897, "O"); 
-	TextDrawLetterSize(LOGO[1], 0.449999, 1.600000); 
-	TextDrawAlignment(LOGO[1], 1); 
-	TextDrawColor(LOGO[1], -16776961); 
-	TextDrawSetShadow(LOGO[1], 0); 
-	TextDrawSetOutline(LOGO[1], 1); 
-	TextDrawBackgroundColor(LOGO[1], 51); 
-	TextDrawFont(LOGO[1], 1); 
-	TextDrawSetProportional(LOGO[1], 1); 
-
-	LOGO[2] = TextDrawCreate(565.000000, 8.088858, "snova"); 
-	TextDrawLetterSize(LOGO[2], 0.449999, 1.600000); 
-	TextDrawAlignment(LOGO[2], 1); 
-	TextDrawColor(LOGO[2], -16776961); 
-	TextDrawSetShadow(LOGO[2], 0); 
-	TextDrawSetOutline(LOGO[2], 1); 
-	TextDrawBackgroundColor(LOGO[2], 51); 
-	TextDrawFont(LOGO[2], 1); 
-	TextDrawSetProportional(LOGO[2], 1); 
-
-	LOGO[3] = TextDrawCreate(565.500000, 20.533287, "RolePlay"); 
-	TextDrawLetterSize(LOGO[3], 0.165500, 0.840888); 
-	TextDrawAlignment(LOGO[3], 1); 
-	TextDrawColor(LOGO[3], -1); 
-	TextDrawSetShadow(LOGO[3], 0); 
-	TextDrawSetOutline(LOGO[3], 1); 
-	TextDrawBackgroundColor(LOGO[3], 51); 
-	TextDrawFont(LOGO[3], 2); 
-	TextDrawSetProportional(LOGO[3], 1); 
-
-	LOGO[4] = TextDrawCreate(603.000000, 3.111082, "ld_chat:badchat"); 
-	TextDrawLetterSize(LOGO[4], 0.000000, 0.000000); 
-	TextDrawTextSize(LOGO[4], 12.000000, 11.200004); 
-	TextDrawAlignment(LOGO[4], 1); 
-	TextDrawColor(LOGO[4], -1); 
-	TextDrawSetShadow(LOGO[4], 0); 
-	TextDrawSetOutline(LOGO[4], 0); 
-	TextDrawFont(LOGO[4], 4);  
-}
-
-stock LoadPickups()
-{
-    return true;
-}
-
-stock Load3DText()
-{
-    return true;
-}
-
-stock LoadDynamicZones()
-{
-    return true;
-}
-
-stock ConnectMySQL()
-{
-    dbHandle = mysql_connect(SQL_HOST, SQL_USER, SQL_PASS, SQL_BASE);
-	switch(mysql_errno())
-    {
-        case 0: print(!"Подключение к базе данных Удалось!");
-        case 1044: print(!"Подключение к базе данных не удалось [Указано неизвестное имя пользователя]");
-        case 1045: print(!"Подключение к базе данных не удалось [Указан неизвестный пароль]");
-        case 1049: print(!"Подключение к базе данных не удалось [Указана неизвестная база данных]");
-        case 2003: print(!"Подключение к базе данных не удалось [Хостинг с базой данных недоступен]");
-        case 2005: print(!"Подключение к базе данных не удалось [Указан неизвестный адрес хостинга]");
-        default: printf("Подключение к базе данных не удалось [Неизвестная ошибка. Код ошибки: %d]", mysql_errno());
-    }
-	mysql_log(ERROR | WARNING); // MySQL logs.
-	mysql_set_charset("cp1251"); // Set cyrylic.
-}
-
-stock SendErrorMessage(playerid, const text[])
-{
-    new str[134+1] = !"»{FFFFFF} ";
-    strcat(str, text);
-    PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
-    return SendClientMessage(playerid, 0xAA3333FF, str);
-}
-
-stock SendInfoMessage(playerid, const text[])
-{
-    new str[134+1] = !"»{FFFFFF} ";
-    strcat(str, text);
-    PlayerPlaySound(playerid, 21001, 0.0, 0.0, 0.0);
-    return SendClientMessage(playerid, 0xFFC800FF, str);
-}
-
-stock SendGoodMessage(playerid, const text[])
-{
-    new str[134+1] = !"»{FFFFFF} ";
-    strcat(str, text);
-    PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
-    return SendClientMessage(playerid, 0xDC143CFF, str);
-}
-
 public OnGameModeExit()
 {
 	mysql_close(); // Close Connection to MySQL
 	return true;
 }
 
-function: PayDay()
-{
-	new _mins, _seconds;
-	gettime(_, _mins, _seconds);
-	SetTimer(!"PayDay", ((60-_mins)*1000*60)+(60-_seconds)*10, false); // PayDay System
-	foreach(new i:Player)
-	{
-		if(PlayerInfo[i][pTimePlayed] >= 300) GiveExp(i, 1);
-	}
-	return printf("["SERVER_NAME3"] PayDay будет через %dм:%dс.", (60-_mins), (60-_seconds));
-}
-
-function: GrandTimer()
-{
-	return false;
-}
-
-function: PlayerSecondTimer(playerid)
-{
-	if(PlayerInfo[playerid][pLogged])
-	{
-		if(GetPlayerMoney(playerid) != PlayerInfo[playerid][pMoney])
-		{
-		    ResetPlayerMoney(playerid);
-		    GivePlayerMoney(playerid, PlayerInfo[playerid][pMoney]);
-		}
-	    PlayerAFK[playerid]++;
-	    if(PlayerAFK[playerid] >= 3)
-	    {
-	        new string[35];
-	        format(string, sizeof(string), "%s {FFFFFF}%d сек",(PlayerAFK[playerid]) < 300 ? "{00e5ff}[Кушает]" : (PlayerAFK[playerid]) < 1800 ? "{e0ff00}[Отошел]" : "{ff6d00}[Гуляет]", PlayerAFK[playerid]);
-	        SetPlayerChatBubble(playerid, string, -1, 20, 1050);
-	    }
-	    PlayerInfo[playerid][pTimePlayed]++;
-	}
-	return true;
-}
-
-stock PreloadAnimLib(playerid, animlib[])
-{
-	ApplyAnimation(playerid, animlib, !"null", 0.0, 0, 0, 0, 0, 0);
-	return true;
-}
-stock PreloadAnim(playerid)
-{
-    PreloadAnimLib(playerid, !"PED");
-    PreloadAnimLib(playerid, !"CRIB");
-    PreloadAnimLib(playerid, !"ON_LOOKERS");
-    PreloadAnimLib(playerid, !"BASEBALL");
-    PreloadAnimLib(playerid, !"CARRY");
-    PreloadAnimLib(playerid, !"CRACK");
-	return true;
-}
-
 public OnPlayerRequestClass(playerid, classid)
 {
 	return true;
-}
-
-stock ResetVariables(playerid)
-{
-	PlayerInfo[playerid][pWrongPassword] = 3;
-    PlayerInfo[playerid][pInAdmCar] = -1;
-    AntiFloodChat[playerid] = 0;
-    AntiFloodCommand[playerid] = 0;
-    PlayerAFK[playerid] = 0;
 }
 
 public OnPlayerConnect(playerid)
@@ -811,11 +225,10 @@ public OnPlayerConnect(playerid)
 		ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_MSGBOX, !""SERVER"Информация", !"{FFFFFF}Ваш ник не соответствует правилам сервера.\nВведите новый ник в окошко и нажмите "SERVER"Далее.\n\n{FFFFFF}Пример: "SERVER"Carl_Johnson", !"Понял", "");
 		return KickEx(playerid);
 	}
-
 	ResetVariables(playerid);
 	
 	SetPlayerColor(playerid, 0x99999900);
-	
+
 	LoadPlayerTextDraws(playerid);
 	RemoveMappingForPlayer(playerid);
 	
@@ -829,148 +242,6 @@ public OnPlayerConnect(playerid)
 	PlayerInfo[playerid][pSecondTimer] = SetTimerEx(!"PlayerSecondTimer", 1000, true, "i", playerid);
 	printf("["SERVER_NAME3"] Таймер №%d, создан для игрока %s[%d]", PlayerInfo[playerid][pSecondTimer], pName(playerid), playerid);
 	return true;
-}
-
-stock LoadPlayerTextDraws(playerid)
-{
-    GraphicPIN_PTD[playerid][0] = CreatePlayerTextDraw(playerid, 249.333236, 196.222259, !"0");
-	PlayerTextDrawLetterSize(playerid, GraphicPIN_PTD[playerid][0], 0.928999, 4.694519);
-	PlayerTextDrawTextSize(playerid, GraphicPIN_PTD[playerid][0], 39.000000, 39.000000);
-	PlayerTextDrawAlignment(playerid, GraphicPIN_PTD[playerid][0], 2);
-	PlayerTextDrawColor(playerid, GraphicPIN_PTD[playerid][0], -1);
-	PlayerTextDrawUseBox(playerid, GraphicPIN_PTD[playerid][0], 1);
-	PlayerTextDrawBoxColor(playerid, GraphicPIN_PTD[playerid][0], -5963521);
-	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][0], 1);
-	PlayerTextDrawSetOutline(playerid, GraphicPIN_PTD[playerid][0], 0);
-	PlayerTextDrawBackgroundColor(playerid, GraphicPIN_PTD[playerid][0], 255);
-	PlayerTextDrawFont(playerid, GraphicPIN_PTD[playerid][0], 3);
-	PlayerTextDrawSetProportional(playerid, GraphicPIN_PTD[playerid][0], 1);
-	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][0], 1);
-	PlayerTextDrawSetSelectable(playerid, GraphicPIN_PTD[playerid][0], true);
-
-	GraphicPIN_PTD[playerid][1] = CreatePlayerTextDraw(playerid, 294.000000, 196.637100, !"1");
-	PlayerTextDrawLetterSize(playerid, GraphicPIN_PTD[playerid][1], 0.928999, 4.694519);
-	PlayerTextDrawTextSize(playerid, GraphicPIN_PTD[playerid][1], 39.000000, 39.000000);
-	PlayerTextDrawAlignment(playerid, GraphicPIN_PTD[playerid][1], 2);
-	PlayerTextDrawColor(playerid, GraphicPIN_PTD[playerid][1], -1);
-	PlayerTextDrawUseBox(playerid, GraphicPIN_PTD[playerid][1], 1);
-	PlayerTextDrawBoxColor(playerid, GraphicPIN_PTD[playerid][1], -5963521);
-	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][1], 1);
-	PlayerTextDrawSetOutline(playerid, GraphicPIN_PTD[playerid][1], 0);
-	PlayerTextDrawBackgroundColor(playerid, GraphicPIN_PTD[playerid][1], 255);
-	PlayerTextDrawFont(playerid, GraphicPIN_PTD[playerid][1], 3);
-	PlayerTextDrawSetProportional(playerid, GraphicPIN_PTD[playerid][1], 1);
-	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][1], 1);
-	PlayerTextDrawSetSelectable(playerid, GraphicPIN_PTD[playerid][1], true);
-
-	GraphicPIN_PTD[playerid][2] = CreatePlayerTextDraw(playerid, 339.000030, 196.637084, !"2");
-	PlayerTextDrawLetterSize(playerid, GraphicPIN_PTD[playerid][2], 0.928999, 4.694519);
-	PlayerTextDrawTextSize(playerid, GraphicPIN_PTD[playerid][2], 39.000000, 39.000000);
-	PlayerTextDrawAlignment(playerid, GraphicPIN_PTD[playerid][2], 2);
-	PlayerTextDrawColor(playerid, GraphicPIN_PTD[playerid][2], -1);
-	PlayerTextDrawUseBox(playerid, GraphicPIN_PTD[playerid][2], 1);
-	PlayerTextDrawBoxColor(playerid, GraphicPIN_PTD[playerid][2], -5963521);
-	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][2], 1);
-	PlayerTextDrawSetOutline(playerid, GraphicPIN_PTD[playerid][2], 0);
-	PlayerTextDrawBackgroundColor(playerid, GraphicPIN_PTD[playerid][2], 255);
-	PlayerTextDrawFont(playerid, GraphicPIN_PTD[playerid][2], 3);
-	PlayerTextDrawSetProportional(playerid, GraphicPIN_PTD[playerid][2], 1);
-	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][2], 1);
-	PlayerTextDrawSetSelectable(playerid, GraphicPIN_PTD[playerid][2], true);
-
-	GraphicPIN_PTD[playerid][3] = CreatePlayerTextDraw(playerid, 383.666778, 196.637084, !"3");
-	PlayerTextDrawLetterSize(playerid, GraphicPIN_PTD[playerid][3], 0.928999, 4.694519);
-	PlayerTextDrawTextSize(playerid, GraphicPIN_PTD[playerid][3], 39.000000, 39.000000);
-	PlayerTextDrawAlignment(playerid, GraphicPIN_PTD[playerid][3], 2);
-	PlayerTextDrawColor(playerid, GraphicPIN_PTD[playerid][3], -1);
-	PlayerTextDrawUseBox(playerid, GraphicPIN_PTD[playerid][3], 1);
-	PlayerTextDrawBoxColor(playerid, GraphicPIN_PTD[playerid][3], -5963521);
-	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][3], 1);
-	PlayerTextDrawSetOutline(playerid, GraphicPIN_PTD[playerid][3], 0);
-	PlayerTextDrawBackgroundColor(playerid, GraphicPIN_PTD[playerid][3], 255);
-	PlayerTextDrawFont(playerid, GraphicPIN_PTD[playerid][3], 3);
-	PlayerTextDrawSetProportional(playerid, GraphicPIN_PTD[playerid][3], 1);
-	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][3], 1);
-	PlayerTextDrawSetSelectable(playerid, GraphicPIN_PTD[playerid][3], true);
-	return false;
-}
-
-stock RemoveMappingForPlayer(playerid)
-{
-	// Remove To spawn
-	RemoveBuildingForPlayer(playerid, 4853, 1736.976, -1960.656, 15.054, 0.250);
-	RemoveBuildingForPlayer(playerid, 1226, 1724.875, -1859.539, 16.351, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1703.468, -1846.710, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1710.835, -1846.710, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 1226, 1714.976, -1841.851, 16.351, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1710.835, -1833.054, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1703.468, -1833.054, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 673, 1704.742, -1829.796, 11.445, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1721.156, -1846.710, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1731.476, -1846.710, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1741.796, -1833.054, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1731.476, -1833.054, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1721.156, -1833.054, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 673, 1723.929, -1829.796, 11.445, 0.250);
-	RemoveBuildingForPlayer(playerid, 700, 1732.671, -1830.078, 11.445, 0.250);
-	RemoveBuildingForPlayer(playerid, 1226, 1774.757, -1931.312, 16.375, 0.250);
-	RemoveBuildingForPlayer(playerid, 1226, 1806.429, -1931.601, 16.375, 0.250);
-	RemoveBuildingForPlayer(playerid, 5024, 1748.843, -1883.031, 14.187, 0.250);
-	RemoveBuildingForPlayer(playerid, 5083, 1748.843, -1883.031, 14.187, 0.250);
-	RemoveBuildingForPlayer(playerid, 1226, 1774.757, -1901.539, 16.375, 0.250);
-	RemoveBuildingForPlayer(playerid, 1226, 1806.429, -1901.828, 16.375, 0.250);
-	RemoveBuildingForPlayer(playerid, 1226, 1755.820, -1859.539, 16.351, 0.250);
-	RemoveBuildingForPlayer(playerid, 1226, 1808.125, -1859.539, 16.351, 0.250);
-	RemoveBuildingForPlayer(playerid, 1226, 1783.671, -1859.539, 16.351, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1747.187, -1846.710, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 1226, 1742.554, -1835.062, 16.351, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1762.828, -1846.710, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1778.476, -1846.710, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1794.117, -1846.710, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 620, 1809.765, -1846.710, 10.804, 0.250);
-	RemoveBuildingForPlayer(playerid, 5033, 1745.199, -1882.849, 26.140, 0.250);
-	RemoveBuildingForPlayer(playerid, 5055, 1745.199, -1882.849, 26.140, 0.250);
-	RemoveBuildingForPlayer(playerid, 5024, 1748.839, -1883.030, 14.187, 0.250);
-	RemoveBuildingForPlayer(playerid, 5083, 1748.839, -1883.030, 14.187, 0.250);
-	RemoveBuildingForPlayer(playerid, 4821, 1745.199, -1882.849, 26.140, 0.250);
-	RemoveBuildingForPlayer(playerid, 4961, 1745.199, -1882.849, 26.140, 0.250);
-}
-
-stock ShowLogin(playerid)
-{
-	new dialog[171+(-2+MAX_PLAYER_NAME)];
-	format(dialog, sizeof(dialog),
-	"{FFFFFF}Уважаемый {00ff2b}%s{FFFFFF}, с возвращением на "SERVER""SERVER_NAME"{FFFFFF}\n\
-	\t\tМы рады снова видеть вас!\n\n\
-	Для продолжения введите свой пароль в поле ниже:", pName(playerid));
-	ShowPlayerDialog(playerid, dLog, DIALOG_STYLE_PASSWORD, !""SERVER"Авторизация{FFFFFF}", dialog, !"Войти", !"Выход");
-	KillTimer(LoginTimer[playerid]);
-	LoginTimer[playerid] = SetTimerEx(!"LoginTimeExpired", 60000, false, !"d", playerid);
-}
-
-function: LoginTimeExpired(playerid)
-{
-	if(!PlayerInfo[playerid][pLogged])
-	{
-	    SendClientMessage(playerid, COLOR_LIGHTRED, !"Время на авторизацию ограничено.");
-	    SendClientMessage(playerid, COLOR_LIGHTRED, !"Введите /q(/quit) чтобы выйти!");
-	    ShowPlayerDialog(playerid, -1, 0, " ", " ", " ", " ");
-	    KickEx(playerid);
-	}
-	return false;
-}
-
-stock ShowRegistration(playerid)
-{
-	new dialog[403+(-2+MAX_PLAYER_NAME)];
-	format(dialog, sizeof(dialog),
-	"{FFFFFF}Уважаемый {FF0000}%s{FFFFFF}, мы рады видеть вас на "SERVER""SERVER_NAME"{FFFFFF}\n\
-	Аккаунт с таким ником не зарегистрирован\n\
-	Для игры на сервере вы должны пройти регистрацию\n\n\
-	Придумайте сложный пароль для вашего будущего аккаунта и нажмите \"Далее\"\n\
-	"SERVER"\t• Пароль должен быть от 8-ми до 32-ух символов\n\
-	\t• Пароль должен состоять только из чисел и латинских символов любого регистра", pName(playerid));
- 	ShowPlayerDialog(playerid, dReg, DIALOG_STYLE_INPUT, !""SERVER"Регистрация{FFFFFF} • Ввод пароля", dialog, !"Далее", !"Выход");
 }
 
 public OnPlayerDisconnect(playerid, reason)
@@ -994,17 +265,6 @@ public OnPlayerDisconnect(playerid, reason)
         PlayerInfo[playerid][pInAdmCar] = -1;
     }
 	return true;
-}
-
-stock UnLoadTextDraws(playerid)
-{
-    TextDrawHideForPlayer(playerid, GraphicPIN_TD);
-    PlayerTextDrawDestroy(playerid, GraphicPIN_PTD[playerid][0]);
-    PlayerTextDrawDestroy(playerid, GraphicPIN_PTD[playerid][1]);
-    PlayerTextDrawDestroy(playerid, GraphicPIN_PTD[playerid][2]);
-    PlayerTextDrawDestroy(playerid, GraphicPIN_PTD[playerid][3]);
-    
-	for(new i; i < sizeof(LOGO); i++) TextDrawHideForPlayer(playerid, LOGO[i]);  
 }
 
 public OnPlayerSpawn(playerid)
@@ -1076,7 +336,6 @@ public OnPlayerText(playerid, text[])
 	return false;
 }
 
-function: StopChatAnim(playerid) return ApplyAnimation(playerid, !"PED", !"facanger", 4.1, 0, 1, 1, 1, 1);
 
 public OnPlayerCommandText(playerid, cmdtext[])
 {
@@ -1117,40 +376,6 @@ public OnPlayerDamage(&playerid, &Float:amount, &issuerid, &weapon, &bodypart)
 	}
 	return true;
 }
-/*
-function: OnCheatDetected(playerid, ip_address[], type, code)
-{
-	switch(code)
-	{
-		case 38: 
-		{
-			SendClientMessage(playerid, COLOR_RED, !"ВНИМАНИЕ! У Вас слабое интернет соединение");
-			SendClientMessage(playerid, COLOR_RED, !"Для более комфортной игры необходимо оптимизировать работу сетевого экрана ПК!");
-			SendClientMessage(playerid, COLOR_RED, !"А также, настоятельно рекомендуем Вам проверить ПК на присутствие вредоносного ПО!");
-			return true;
-		}
-		default:
-		{
-			new _year, _month, _day;
-			getdate( _year, _month, _day);
-			static const fmt_str[] = "\
-			{FF00AA}Вы были отсоединены от сервера Анти-Чит системой.\n\n\
-			{FFFFFF}Не исключено, что это могло произойти по ошибке, в таком случае, приносим свои извинения.\n\
-			{CECECE}Ник-Нейм: "SERVER"%s\n\
-			{CECECE}Идентификатор: "SERVER"#%03i\n\
-			{CECECE}Задержка: "SERVER"%i мс.\n\
-			{CECECE}Время на момент срабатывания: "SERVER"%02d:%02d:%02d\n\n\
-			\t{FF6347}Напоминаем, что использование чит-программ наказывается блокировкой аккаунта!";
-			new string[sizeof(fmt_str)+(-2+MAX_PLAYER_NAME)+(-4+3)+(-2+3)+(-12+11)];
-			format(string, sizeof(string), fmt_str, pName(playerid), code, GetPlayerPing(playerid), _year, _month, _day);
-			ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_MSGBOX, !""SERVER"Анти-Чит", string, !"Понял", "");
-			AntiCheatKickWithDesync(playerid, code); // Для логов в консоль
-			format(string, sizeof(string), "[Nex-AC] %s[%d] был(а) кикнут за использование чит чит-программ. Код: #%03i", pName(playerid), playerid, code);
-			SendAdminMessage(COLOR_TOMATO, string);
-		}
-	}
-	return true;
-}*/
 
 public OnQueryError(errorid, const error[], const callback[], const query[], MySQL:handle)
 {
@@ -1283,19 +508,6 @@ public OnPlayerUpdate(playerid)
 	    format(string, sizeof(string), "Вы простояли в AFK: {FFFFFF}%d секунд.", PlayerAFK[playerid]);
 	    SendClientMessage(playerid, COLOR_LIGHTBLUE, string);
 	}
-    if(pPickupID[playerid])
-    {
-        new pickupid = pPickupID[playerid];
-        if(!IsValidDynamicPickup(pickupid)) pPickupID[playerid] = 0;
-        else
-        {
-            new Float:pos_x, Float:pos_y, Float:pos_z;
-            Streamer_GetFloatData(STREAMER_TYPE_PICKUP, pickupid, E_STREAMER_X, pos_x);
-            Streamer_GetFloatData(STREAMER_TYPE_PICKUP, pickupid, E_STREAMER_Y, pos_y);
-            Streamer_GetFloatData(STREAMER_TYPE_PICKUP, pickupid, E_STREAMER_Z, pos_z);
-            if(!IsPlayerInRangeOfPoint(playerid, 2.0, pos_x, pos_y, pos_z)) pPickupID[playerid] = 0;
-        }
-    }
     PlayerAFK[playerid] = 0;
 	return true;
 }
@@ -1322,24 +534,23 @@ public OnVehicleStreamOut(vehicleid, forplayerid)
 
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
-	new str_len = strlen(inputtext);
 	switch(dialogid)
 	{
 	    case dReg:
 	    {
 	        if(response)
 	        {
-	            if(!str_len)
+	            if(!strlen(inputtext))
 	            {
 	                ShowRegistration(playerid);
 	                return SendErrorMessage(playerid, !"Введите пароль в поле ниже и нажмите \"Далее\"");
 	            }
-	            if(!(8 <= str_len <= 32))
+	            if(!(8 <= strlen(inputtext) <= 32))
 	            {
 	                ShowRegistration(playerid);
 	                return SendErrorMessage(playerid, !"Длина пароля должна быть от 8-ми до 32-ух символов");
 	            }
-	            new regex:rg_passwordcheck = regex_new("^[a-zA-Z0-9]{1,}$");
+	            new regex:rg_passwordcheck = regex_new(!"^[a-zA-Z0-9]{1,}$");
 	            if(regex_check(inputtext, rg_passwordcheck))
 	            {
 					new salt[11];
@@ -1351,9 +562,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					SHA256_PassHash(inputtext, salt, PlayerInfo[playerid][pPassword], 65);
 					strmid(PlayerInfo[playerid][pSalt], salt, 0, 11, 11);
 					ShowPlayerDialog(playerid, dRegEmail, DIALOG_STYLE_INPUT, !""SERVER"Регистрация{FFFFFF} • Ввод Email",
-				 		!"{FFFFFF}\t\t\tВведите ваш настоящий Email адрес\n\
-				 		Если вы потеряете доступ к аккаунту, то вы сможете восстановить его через Email\n\
-						\t\tВведите ваш Email в поле ниже и нажмите \"Далее\"",
+			 		!"{FFFFFF}\t\t\tВведите ваш настоящий Email адрес\n\
+			 		Если вы потеряете доступ к аккаунту, то вы сможете восстановить его через Email\n\
+					\t\tВведите ваш Email в поле ниже и нажмите \"Далее\"",
 					!"Далее", "");
 	            }
 	            else
@@ -1372,30 +583,30 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    }
 	    case dRegEmail:
 	    {
-	        if(!str_len)
+	        if(!strlen(inputtext))
             {
                 ShowPlayerDialog(playerid, dRegEmail, DIALOG_STYLE_INPUT, !""SERVER"Регистрация{FFFFFF} • Ввод Email",
-			 		!"{FFFFFF}\t\t\tВведите ваш настоящий Email адрес\n\
-			 		Если вы потеряете доступ к аккаунту, то вы сможете восстановить его через Email\n\
-					\t\tВведите ваш Email в поле ниже и нажмите \"Далее\"",
+		 		!"{FFFFFF}\t\t\tВведите ваш настоящий Email адрес\n\
+		 		Если вы потеряете доступ к аккаунту, то вы сможете восстановить его через Email\n\
+				\t\tВведите ваш Email в поле ниже и нажмите \"Далее\"",
 				!"Далее", "");
 				return SendErrorMessage(playerid, !"Введите ваш Email в поле ниже и нажмите \"Далее\"");
             }
-            new regex:rg_emailcheck = regex_new("^[a-zA-Z0-9.-_]{1,43}@[a-zA-Z]{1,12}\\.[a-zA-Z]{1,8}$");
+            new regex:rg_emailcheck = regex_new(!"^[a-zA-Z0-9.-_]{1,43}@[a-zA-Z]{1,12}\\.[a-zA-Z]{1,8}$");
             if(regex_check(inputtext, rg_emailcheck))
             {
-                strmid(PlayerInfo[playerid][pEmail], inputtext, 0, str_len, 64);
+                strmid(PlayerInfo[playerid][pEmail], inputtext, 0, strlen(inputtext), 64);
                 ShowPlayerDialog(playerid, dRegRef, DIALOG_STYLE_INPUT, !""SERVER"Регистрация{FFFFFF} • Ввод пригласившего",
-					!"{FFFFFF}Если ты зашёл на сервер по приглашению, то\n\
-					можешь указать ник пригласившего в поле ниже:",
+				!"{FFFFFF}Если ты зашёл на сервер по приглашению, то\n\
+				можешь указать ник пригласившего в поле ниже:",
 				!"Далее", !"Пропустить");
             }
             else
             {
                 ShowPlayerDialog(playerid, dRegEmail, DIALOG_STYLE_INPUT, !""SERVER"Регистрация{FFFFFF} • Ввод Email",
-			 		!"{FFFFFF}\t\t\tВведите ваш настоящий Email адрес\n\
-			 		Если вы потеряете доступ к аккаунту, то вы сможете восстановить его через Email\n\
-					\t\tВведите ваш Email в поле ниже и нажмите \"Далее\"",
+		 		!"{FFFFFF}\t\t\tВведите ваш настоящий Email адрес\n\
+		 		Если вы потеряете доступ к аккаунту, то вы сможете восстановить его через Email\n\
+				\t\tВведите ваш Email в поле ниже и нажмите \"Далее\"",
 				!"Далее", "");
 				regex_delete(rg_emailcheck);
                 return SendErrorMessage(playerid, !"Укажите правильно ваш Email адрес");
@@ -1414,7 +625,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	        else
 	        {
 	            ShowPlayerDialog(playerid, dRegSex, DIALOG_STYLE_MSGBOX, !""SERVER"Регистрация{FFFFFF} • Выбор пола персонажа",
-					!"{FFFFFF}Выберите пол вашего будущего персонажа:",
+				!"{FFFFFF}Выберите пол вашего будущего персонажа:",
 				!"Мужской", !"Женский");
 	        }
 	    }
@@ -1422,26 +633,26 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    {
 			PlayerInfo[playerid][pSex] = (response) ? (1) : (2);
 	        ShowPlayerDialog(playerid, dRegRace, DIALOG_STYLE_LIST, !""SERVER"Регистрация{FFFFFF} • Выбор расы персонажа",
-				!"Негроидная\n\
-				Европеоидная\n\
-				Монголоидная/Азиатская",
+			!"Негроидная\n\
+			Европеоидная\n\
+			Монголоидная/Азиатская",
 			!"Далее", "");
 	    }
 	    case dRegRace:
 	    {
 	        PlayerInfo[playerid][pRace] = listitem+1;
 	        ShowPlayerDialog(playerid, dRegAge, DIALOG_STYLE_INPUT, !""SERVER"Регистрация{FFFFFF} • Выбор возраста персонажа",
-				!"{FFFFFF}Введите возраст вашего будущего персонажа:\n\
-				"SERVER"\t• Введите возраст от 18-ти до 60-ти",
+			!"{FFFFFF}Введите возраст вашего будущего персонажа:\n\
+			"SERVER"\t• Введите возраст от 18-ти до 60-ти",
 			!"Далее", "");
 	    }
 		case dRegAge:
 		{
-		    if(!str_len)
+		    if(!strlen(inputtext))
             {
                 ShowPlayerDialog(playerid, dRegAge, DIALOG_STYLE_INPUT, !""SERVER"Регистрация{FFFFFF} • Выбор возраста персонажа",
-					!"{FFFFFF}Введите возраст вашего будущего персонажа:\n\
-					"SERVER"\t• Введите возраст от 18-ти до 60-ти",
+				!"{FFFFFF}Введите возраст вашего будущего персонажа:\n\
+				"SERVER"\t• Введите возраст от 18-ти до 60-ти",
 				!"Далее", "");
 				return SendErrorMessage(playerid, !"Введите ваш возраст в поле ниже и нажмите \"Далее\"");
 			}
@@ -1506,7 +717,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response)
 	        {
-	            if(!str_len)
+	            if(!strlen(inputtext))
 	            {
 	                ShowLogin(playerid);
 	                return true;
@@ -1538,7 +749,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 							else
 							{
                                 TextDrawShowForPlayer(playerid, GraphicPIN_TD);
-                                GeneratePinCheck(playerid, GetPVarInt(playerid, "pinpos"));
+                                GeneratePinCheck(playerid, GetPVarInt(playerid, !"pinpos"));
                                 SelectTextDraw(playerid, 0x00000030);
 							}
 						    return true;
@@ -1546,7 +757,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						else
 						{
 						    TextDrawShowForPlayer(playerid, GraphicPIN_TD);
-							GeneratePinCheck(playerid, GetPVarInt(playerid, "pinpos"));
+							GeneratePinCheck(playerid, GetPVarInt(playerid, !"pinpos"));
                             SelectTextDraw(playerid, 0x00000030);
 							return true;
 						}
@@ -1613,9 +824,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					{
 					    new dialog[81];
 					    format(dialog, sizeof(dialog),
-							"Установить PIN код\n\
-							Удалить PIN код\n\
-							Спрашивать PIN код %s",
+						"Установить PIN код\n\
+						Удалить PIN код\n\
+						Спрашивать PIN код %s",
 						(PlayerInfo[playerid][pPin][1] == 0) ? ("{32CD32}[При смене IP]") : (""SERVER"[Всегда]"));
 						ShowPlayerDialog(playerid, dSecretpincontrol, DIALOG_STYLE_LIST, !""SERVER"Управление графическим PIN кодом", dialog, !"Выбрать", !"Закрыть");
 					}
@@ -1623,9 +834,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					{
 					    new dialog[120];
 					    format(dialog, sizeof(dialog),
-							"Установить Google Authenticator\n\
-							Удалить Google Authenticator\n\
-							Спрашивать Google Authenticator %s",
+						"Установить Google Authenticator\n\
+						Удалить Google Authenticator\n\
+						Спрашивать Google Authenticator %s",
 						(PlayerInfo[playerid][pGoogleauthsetting] == 0) ? ("{32CD32}[При смене IP]") : (""SERVER"[Всегда]"));
 						ShowPlayerDialog(playerid, dGoogleauthcontrol, DIALOG_STYLE_LIST, !""SERVER"Управление Google Authenticator", dialog, !"Выбрать", !"Закрыть");
 					}
@@ -1637,7 +848,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response)
 	        {
-			    if(!str_len) return ShowPlayerDialog(playerid, dNewpassword1, DIALOG_STYLE_INPUT, !""SERVER"Изменение пароля{FFFFFF} • Шаг первый", !"{FFFFFF}Введите ваш текущий пароль в поле ниже:", !"Далее", !"Закрыть");
+			    if(!strlen(inputtext)) return ShowPlayerDialog(playerid, dNewpassword1, DIALOG_STYLE_INPUT, !""SERVER"Изменение пароля{FFFFFF} • Шаг первый", !"{FFFFFF}Введите ваш текущий пароль в поле ниже:", !"Далее", !"Закрыть");
 			    new checkpass[65];
 	            SHA256_PassHash(inputtext, PlayerInfo[playerid][pSalt], checkpass, 65);
 				if(strcmp(PlayerInfo[playerid][pPassword], checkpass, false, 64) == 0)
@@ -1655,13 +866,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response)
 	        {
-			    if(!str_len) return ShowPlayerDialog(playerid, dNewpassword2, DIALOG_STYLE_INPUT, !""SERVER"Изменение пароля{FFFFFF} • Шаг второй", !"{FFFFFF}Введите ваш новый пароль в поле ниже:", !"Сохранить", !"Закрыть");
-	            if(!(8 <= str_len <= 32))
+			    if(!strlen(inputtext)) return ShowPlayerDialog(playerid, dNewpassword2, DIALOG_STYLE_INPUT, !""SERVER"Изменение пароля{FFFFFF} • Шаг второй", !"{FFFFFF}Введите ваш новый пароль в поле ниже:", !"Сохранить", !"Закрыть");
+	            if(!(8 <= strlen(inputtext) <= 32))
 	            {
 	                ShowPlayerDialog(playerid, dNewpassword2, DIALOG_STYLE_INPUT, !""SERVER"Изменение пароля{FFFFFF} • Шаг второй", !"{FFFFFF}Введите ваш новый пароль в поле ниже:", !"Сохранить", !"Закрыть");
 	                return SendErrorMessage(playerid, !"Длина пароля должна быть от 8-ми до 32-ух символов");
 	            }
-	            new regex:rg_passwordcheck = regex_new("^[a-zA-Z0-9]{1,}$");
+	            new regex:rg_passwordcheck = regex_new(!"^[a-zA-Z0-9]{1,}$");
 	            if(regex_check(inputtext, rg_passwordcheck))
 	            {
 					new salt[11];
@@ -1699,9 +910,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					    {
 					        new dialog[81];
 						    format(dialog, sizeof(dialog),
-								"Установить PIN код\n\
-								Удалить PIN код\n\
-								Спрашивать PIN код %s",
+							"Установить PIN код\n\
+							Удалить PIN код\n\
+							Спрашивать PIN код %s",
 							(PlayerInfo[playerid][pPin][1] == 0) ? ("{32CD32}[При смене IP]") : (""SERVER"[Всегда]"));
 							ShowPlayerDialog(playerid, dSecretpincontrol, DIALOG_STYLE_LIST, !""SERVER"Управление графическим PIN кодом", dialog, !"Выбрать", !"Закрыть");
 							return SendErrorMessage(playerid, !"У вас уже установлен графический PIN код");
@@ -1714,9 +925,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					    {
 					        new dialog[81];
 						    format(dialog, sizeof(dialog),
-								"Установить PIN код\n\
-								Удалить PIN код\n\
-								Спрашивать PIN код %s",
+							"Установить PIN код\n\
+							Удалить PIN код\n\
+							Спрашивать PIN код %s",
 							(PlayerInfo[playerid][pPin][1] == 0) ? ("{32CD32}[При смене IP]") : (""SERVER"[Всегда]"));
 							ShowPlayerDialog(playerid, dSecretpincontrol, DIALOG_STYLE_LIST, !""SERVER"Управление графическим PIN кодом", dialog, !"Выбрать", !"Закрыть");
 							return SendErrorMessage(playerid, !"У вас не установлен графический PIN код");
@@ -1734,9 +945,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						mysql_tquery(dbHandle, query);
 						new dialog[81];
 					    format(dialog, sizeof(dialog),
-							"Установить PIN код\n\
-							Удалить PIN код\n\
-							Спрашивать PIN код %s",
+						"Установить PIN код\n\
+						Удалить PIN код\n\
+						Спрашивать PIN код %s",
 						(PlayerInfo[playerid][pPin][1] == 0) ? ("{32CD32}[При смене IP]") : (""SERVER"[Всегда]"));
 						ShowPlayerDialog(playerid, dSecretpincontrol, DIALOG_STYLE_LIST, !""SERVER"Управление графическим PIN кодом", dialog, !"Выбрать", !"Закрыть");
 					}
@@ -1745,8 +956,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		}
 		case dSecretpinset:
 		{
-		    if(!str_len) ShowPlayerDialog(playerid, dSecretpinset, DIALOG_STYLE_INPUT, !""SERVER"Установка графического PIN кода{FFFFFF}", !"{FFFFFF}Введите ваш будущий графический PIN код в поле ниже:\n\nПримечание: PIN код должен быть 4-ёх значным и не начинатся на 0", !"Сохранить", !"Закрыть");
-		    new regex:rg_secretpincheck = regex_new("^[1-9]{1}[0-9]{3}$");
+		    if(!strlen(inputtext)) ShowPlayerDialog(playerid, dSecretpinset, DIALOG_STYLE_INPUT, !""SERVER"Установка графического PIN кода{FFFFFF}", !"{FFFFFF}Введите ваш будущий графический PIN код в поле ниже:\n\nПримечание: PIN код должен быть 4-ёх значным и не начинатся на 0", !"Сохранить", !"Закрыть");
+		    new regex:rg_secretpincheck = regex_new(!"^[1-9]{1}[0-9]{3}$");
             if(regex_check(inputtext, rg_secretpincheck))
             {
                 PlayerInfo[playerid][pPin][0] = strval(inputtext);
@@ -1772,7 +983,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response)
 	        {
-			    if(!str_len) ShowPlayerDialog(playerid, dSecretpinreset, DIALOG_STYLE_INPUT, !""SERVER"Удаление графического PIN кода{FFFFFF}", !"{FFFFFF}Введите ваш текущий графический PIN код в поле ниже:", !"Удалить", !"Закрыть");
+			    if(!strlen(inputtext)) ShowPlayerDialog(playerid, dSecretpinreset, DIALOG_STYLE_INPUT, !""SERVER"Удаление графического PIN кода{FFFFFF}", !"{FFFFFF}Введите ваш текущий графический PIN код в поле ниже:", !"Удалить", !"Закрыть");
 				if(strval(inputtext) == PlayerInfo[playerid][pPin][0])
 				{
 				    PlayerInfo[playerid][pPin][0] = 0;
@@ -1802,27 +1013,24 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					    {
 					        new dialog[120];
 						    format(dialog, sizeof(dialog),
-								"Установить Google Authenticator\n\
-								Удалить Google Authenticator\n\
-								Спрашивать Google Authenticator %s",
+							"Установить Google Authenticator\n\
+							Удалить Google Authenticator\n\
+							Спрашивать Google Authenticator %s",
 							(PlayerInfo[playerid][pGoogleauthsetting] == 0) ? ("{32CD32}[При смене IP]") : (""SERVER"[Всегда]"));
 							ShowPlayerDialog(playerid, dGoogleauthcontrol, DIALOG_STYLE_LIST, !""SERVER"Управление Google Authenticator", dialog, !"Выбрать", !"Закрыть");
 							return SendErrorMessage(playerid, !"У вас уже установлен Google Authenticator");
 					    }
-						PlayerInfo[playerid][pGoogleauth] = EOS;
-						for(new i; i < 16; i++)
-						{
-						    PlayerInfo[playerid][pGoogleauth][i] = random(25) + 65;
-						}
+						PlayerInfo[playerid][pGoogleauth][0] = EOS;
+						for(new i; i < 16; i++) PlayerInfo[playerid][pGoogleauth][i] = random(25) + 65;
 						new dialog[531+(-2+MAX_PLAYER_NAME)+(-2+16)];
 					 	format(dialog, sizeof(dialog),
-					 		"{FFFFFF}Скачайте и установите приложение Google Authenticator на ваше мобильное устройство\n\n\
-						 	Если у вас Android, то нажмите кнопку '+' в правом верхнем углу и выберите \"Ввести ключ\"\n\
-						 	Если у вас IOS, то нажмите кнопку '+' в правом верхнем углу и выберите \"Ввод вручную\"\n\n\
-						 	В поле \"Аккаунт\" введите: "SERVER"%s@foundationrp{FFFFFF}\n\
-						 	В поле \"Ключ\" введите: "SERVER"%s{FFFFFF}\n\n\
-					 		После добавления аккаунта нажмите кнопку \"Далее\"\n\
-						 	Часовой пояс установленный на телефоне, должен совпадать тому, что установлен на сервере",
+				 		"{FFFFFF}Скачайте и установите приложение Google Authenticator на ваше мобильное устройство\n\n\
+					 	Если у вас Android, то нажмите кнопку '+' в правом верхнем углу и выберите \"Ввести ключ\"\n\
+					 	Если у вас IOS, то нажмите кнопку '+' в правом верхнем углу и выберите \"Ввод вручную\"\n\n\
+					 	В поле \"Аккаунт\" введите: "SERVER"%s@foundationrp{FFFFFF}\n\
+					 	В поле \"Ключ\" введите: "SERVER"%s{FFFFFF}\n\n\
+				 		После добавления аккаунта нажмите кнопку \"Далее\"\n\
+					 	Часовой пояс установленный на телефоне, должен совпадать тому, что установлен на сервере",
 						pName(playerid),
 						PlayerInfo[playerid][pGoogleauth]);
 						ShowPlayerDialog(playerid, dGoogleauthinstall, DIALOG_STYLE_MSGBOX, !""SERVER"Установка Google Authenticator{FFFFFF} • Шаг первый", dialog, !"Далее", "");
@@ -1833,9 +1041,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						{
 						    new dialog[120];
 						    format(dialog, sizeof(dialog),
-								"Установить Google Authenticator\n\
-								Удалить Google Authenticator\n\
-								Спрашивать Google Authenticator %s",
+							"Установить Google Authenticator\n\
+							Удалить Google Authenticator\n\
+							Спрашивать Google Authenticator %s",
 							(PlayerInfo[playerid][pGoogleauthsetting] == 0) ? ("{32CD32}[При смене IP]") : (""SERVER"[Всегда]"));
 							ShowPlayerDialog(playerid, dGoogleauthcontrol, DIALOG_STYLE_LIST, !""SERVER"Управление Google Authenticator", dialog, !"Выбрать", !"Закрыть");
 							return SendErrorMessage(playerid, !"У вас не установлен Google Authenticator");
@@ -1844,14 +1052,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						{
 						    new dialog[120];
 						    format(dialog, sizeof(dialog),
-								"Установить Google Authenticator\n\
-								Удалить Google Authenticator\n\
-								Спрашивать Google Authenticator %s",
+							"Установить Google Authenticator\n\
+							Удалить Google Authenticator\n\
+							Спрашивать Google Authenticator %s",
 							(PlayerInfo[playerid][pGoogleauthsetting] == 0) ? ("{32CD32}[При смене IP]") : (""SERVER"[Всегда]"));
 							ShowPlayerDialog(playerid, dGoogleauthcontrol, DIALOG_STYLE_LIST, !""SERVER"Управление Google Authenticator", dialog, !"Выбрать", !"Закрыть");
 							return SendErrorMessage(playerid, !"Администраторам запрещено удалять Google Authenticator");
 						}
-                        PlayerInfo[playerid][pGoogleauth] = EOS;
+                        PlayerInfo[playerid][pGoogleauth][0] = EOS;
                         strcat(PlayerInfo[playerid][pGoogleauth], "0");
                         SendInfoMessage(playerid, !"Google Authenticator удалён");
 			            static const fmt_query[] = "UPDATE "TABLE_ACCOUNT" SET `pGoogleauth` = '%s' WHERE `pID` = '%d'";
@@ -1870,9 +1078,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						mysql_tquery(dbHandle, query);
 						new dialog[120];
 					    format(dialog, sizeof(dialog),
-							"Установить Google Authenticator\n\
-							Удалить Google Authenticator\n\
-							Спрашивать Google Authenticator %s",
+						"Установить Google Authenticator\n\
+						Удалить Google Authenticator\n\
+						Спрашивать Google Authenticator %s",
 						(PlayerInfo[playerid][pGoogleauthsetting] == 0) ? ("{32CD32}[При смене IP]") : (""SERVER"[Всегда]"));
 						ShowPlayerDialog(playerid, dGoogleauthcontrol, DIALOG_STYLE_LIST, !""SERVER"Управление Google Authenticator", dialog, !"Выбрать", !"Закрыть");
 					}
@@ -1882,7 +1090,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		case dGoogleauthinstall:
 		{
 			if(response) ShowPlayerDialog(playerid, dGoogleauthinstallCheck, DIALOG_STYLE_INPUT, !""SERVER"Установка Google Authenticator{FFFFFF} • Шаг второй", !"{FFFFFF}Для завершения установки Google Authenticator\nВведите код из приложения в поле ниже:", !"Далее", "Отмена");
-			else PlayerInfo[playerid][pGoogleauth] = EOS; // Clear
+			else PlayerInfo[playerid][pGoogleauth][0] = EOS; // Clear
 		}
 		case dGoogleauthinstallCheck:
 		{
@@ -1903,7 +1111,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		            return SendErrorMessage(playerid, !"Код не совпадает");
 		        }
 		    }
-		    else PlayerInfo[playerid][pGoogleauth] = EOS;
+		    else PlayerInfo[playerid][pGoogleauth][0] = EOS;
 		}
 		case dCheckgoogleauth:
 		{
@@ -1925,26 +1133,26 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					case 0:
 					{
 					    ShowPlayerDialog(playerid, dReport, DIALOG_STYLE_INPUT, !"{FFFFFF}Написать {e93230}жалобу",
-							!"{FFFFFF}Перед тем, как отправлять жалобу администрации, удостоверьтесь что вы не нарушаете нижеуказанные правила:\n\n\
-							\t\t\t{e91432}Запрещено:\n\
-							\t\t\t1. Задавать вопросы (Для этого есть раздел \"{FFFFFF}Задать {11dd77}вопрос{e91432}\")\n\
-							\t\t\t2. Флуд, капс, оскорбления, оффтоп.\n\
-							\t\t\t3. Просьбы по типу - \"Дайте денег, дайте лвл\"\n\
-							\t\t\t4. Ложные сообщения\n\n\
-							{FFFFFF}При нарушении вышеуказанных правил администратор может наказать вас различными для этого средствами.\n\
-							Помните, что ваша жалоба не единственная, администрации нужно время на обработку всех поступающих жалоб",
+						!"{FFFFFF}Перед тем, как отправлять жалобу администрации, удостоверьтесь что вы не нарушаете нижеуказанные правила:\n\n\
+						\t\t\t{e91432}Запрещено:\n\
+						\t\t\t1. Задавать вопросы (Для этого есть раздел \"{FFFFFF}Задать {11dd77}вопрос{e91432}\")\n\
+						\t\t\t2. Флуд, капс, оскорбления, оффтоп.\n\
+						\t\t\t3. Просьбы по типу - \"Дайте денег, дайте лвл\"\n\
+						\t\t\t4. Ложные сообщения\n\n\
+						{FFFFFF}При нарушении вышеуказанных правил администратор может наказать вас различными для этого средствами.\n\
+						Помните, что ваша жалоба не единственная, администрации нужно время на обработку всех поступающих жалоб",
 						!"Отправить", !"Назад");
 					}
 					case 1:
 					{
 						ShowPlayerDialog(playerid, dQuestion, DIALOG_STYLE_INPUT, !"{FFFFFF}Задать{11dd77} вопрос",
-							!"{FFFFFF}Перед тем, как отправлять жалобу администрации, удостоверьтесь что вы не нарушаете нижеуказанные правила:\n\n\
-							\t\t\t{e91432}Запрещено:\n\
-							\t\t\t1. Писать жалобы (Для этого есть раздел \"{FFFFFF}Написать {e93230}жалобу{e91432}\")\n\
-							\t\t\t2. Флуд, капс, оскорбления, оффтоп.\n\
-							\t\t\t3. Просьбы по типу - \"Дайте денег, дайте лвл\"\n\n\
-							{FFFFFF}При нарушении вышеуказанных правил администратор может наказать вас различными для этого средствами.\n\
-							Помните, что ваш вопрос не единственный, администрации нужно время на обработку всех поступающих вопросов",
+						!"{FFFFFF}Перед тем, как отправлять жалобу администрации, удостоверьтесь что вы не нарушаете нижеуказанные правила:\n\n\
+						\t\t\t{e91432}Запрещено:\n\
+						\t\t\t1. Писать жалобы (Для этого есть раздел \"{FFFFFF}Написать {e93230}жалобу{e91432}\")\n\
+						\t\t\t2. Флуд, капс, оскорбления, оффтоп.\n\
+						\t\t\t3. Просьбы по типу - \"Дайте денег, дайте лвл\"\n\n\
+						{FFFFFF}При нарушении вышеуказанных правил администратор может наказать вас различными для этого средствами.\n\
+						Помните, что ваш вопрос не единственный, администрации нужно время на обработку всех поступающих вопросов",
 						!"Отправить", !"Назад");
 					}
 				}
@@ -1955,30 +1163,30 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response)
 		    {
-				if(!str_len)
+				if(!strlen(inputtext))
 				{
 				    ShowPlayerDialog(playerid, dReport, DIALOG_STYLE_INPUT, !"{FFFFFF}Написать {e93230}жалобу",
-						!"{FFFFFF}Перед тем, как отправлять жалобу администрации, удостоверьтесь что вы не нарушаете нижеуказанные правила:\n\n\
-						\t\t\t{e91432}Запрещено:\n\
-						\t\t\t1. Задавать вопросы (Для этого есть раздел \"{FFFFFF}Задать {11dd77}вопрос{e91432}\")\n\
-						\t\t\t2. Флуд, капс, оскорбления, оффтоп.\n\
-						\t\t\t3. Просьбы по типу - \"Дайте денег, дайте лвл\"\n\
-						\t\t\t4. Ложные сообщения\n\n\
-						{FFFFFF}При нарушении вышеуказанных правил администратор может наказать вас различными для этого средствами.\n\
-						Помните, что ваша жалоба не единственная, администрации нужно время на обработку всех поступающих жалоб",
+					!"{FFFFFF}Перед тем, как отправлять жалобу администрации, удостоверьтесь что вы не нарушаете нижеуказанные правила:\n\n\
+					\t\t\t{e91432}Запрещено:\n\
+					\t\t\t1. Задавать вопросы (Для этого есть раздел \"{FFFFFF}Задать {11dd77}вопрос{e91432}\")\n\
+					\t\t\t2. Флуд, капс, оскорбления, оффтоп.\n\
+					\t\t\t3. Просьбы по типу - \"Дайте денег, дайте лвл\"\n\
+					\t\t\t4. Ложные сообщения\n\n\
+					{FFFFFF}При нарушении вышеуказанных правил администратор может наказать вас различными для этого средствами.\n\
+					Помните, что ваша жалоба не единственная, администрации нужно время на обработку всех поступающих жалоб",
 					!"Отправить", !"Назад");
 				}
-				if(str_len > 97)
+				if(strlen(inputtext) > 97)
 				{
 				    ShowPlayerDialog(playerid, dReport, DIALOG_STYLE_INPUT, !"{FFFFFF}Написать {e93230}жалобу",
-						!"{FFFFFF}Перед тем, как отправлять жалобу администрации, удостоверьтесь что вы не нарушаете нижеуказанные правила:\n\n\
-						\t\t\t{e91432}Запрещено:\n\
-						\t\t\t1. Задавать вопросы (Для этого есть раздел \"{FFFFFF}Задать {11dd77}вопрос{e91432}\")\n\
-						\t\t\t2. Флуд, капс, оскорбления, оффтоп.\n\
-						\t\t\t3. Просьбы по типу - \"Дайте денег, дайте лвл\"\n\
-						\t\t\t4. Ложные сообщения\n\n\
-						{FFFFFF}При нарушении вышеуказанных правил администратор может наказать вас различными для этого средствами.\n\
-						Помните, что ваша жалоба не единственная, администрации нужно время на обработку всех поступающих жалоб",
+					!"{FFFFFF}Перед тем, как отправлять жалобу администрации, удостоверьтесь что вы не нарушаете нижеуказанные правила:\n\n\
+					\t\t\t{e91432}Запрещено:\n\
+					\t\t\t1. Задавать вопросы (Для этого есть раздел \"{FFFFFF}Задать {11dd77}вопрос{e91432}\")\n\
+					\t\t\t2. Флуд, капс, оскорбления, оффтоп.\n\
+					\t\t\t3. Просьбы по типу - \"Дайте денег, дайте лвл\"\n\
+					\t\t\t4. Ложные сообщения\n\n\
+					{FFFFFF}При нарушении вышеуказанных правил администратор может наказать вас различными для этого средствами.\n\
+					Помните, что ваша жалоба не единственная, администрации нужно время на обработку всех поступающих жалоб",
 					!"Отправить", !"Назад");
 				    return SendErrorMessage(playerid, !"Слишком длинное сообщение");
 				}
@@ -1999,46 +1207,51 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					case 0:
 					{
 					    ShowPlayerDialog(playerid, dAhelpCMD, DIALOG_STYLE_MSGBOX, !""SERVER"Команды {FFFFFF}первого уровня",
-							!""SERVER"/admins{FFFFFF} - посмотреть администрацию в сети\n\
-							"SERVER"/a{FFFFFF} - чат администрации\n\
-							"SERVER"/rep{FFFFFF} - ответить на жалобу",
+						!""SERVER"/admins{FFFFFF} - посмотреть администрацию в сети\n\
+						"SERVER"/a{FFFFFF} - чат администрации\n\
+						"SERVER"/rep{FFFFFF} - ответить на жалобу",
 						!"Назад", "Закрыть");
 					}
 					case 1:
 					{
 					    ShowPlayerDialog(playerid, dAhelpCMD, DIALOG_STYLE_MSGBOX, !""SERVER"Команды {FFFFFF}второго уровня",
-							!"",
+						!"",
 						!"Назад", "Закрыть");
 					}
 					case 2:
 					{
 					    ShowPlayerDialog(playerid, dAhelpCMD, DIALOG_STYLE_MSGBOX, !""SERVER"Команды {FFFFFF}третьего уровня",
-							!""SERVER"/tpcor{FFFFFF} - переместиться на координаты\n\
-							"SERVER"/setint{FFFFFF} - переместиться в id интерьера\n\
-							"SERVER"/setworld{FFFFFF} - переместиться в id вирт. мира\n\
-							"SERVER"/goto{FFFFFF} - телепортироваться к игроку\n\
-							"SERVER"/gethere{FFFFFF} - телепортировать игрока к себе\n\
-							"SERVER"/plveh{FFFFFF} - выдать игроку автомобиль",
+						!""SERVER"/tpcor{FFFFFF} - переместиться на координаты\n\
+						"SERVER"/setint{FFFFFF} - переместиться в id интерьера\n\
+						"SERVER"/setworld{FFFFFF} - переместиться в id вирт. мира\n\
+						"SERVER"/goto{FFFFFF} - телепортироваться к игроку\n\
+						"SERVER"/gethere{FFFFFF} - телепортировать игрока к себе\n\
+						"SERVER"/plveh{FFFFFF} - выдать игроку автомобиль",
 						!"Назад", "Закрыть");
 					}
 					case 3:
 					{
 					    ShowPlayerDialog(playerid, dAhelpCMD, DIALOG_STYLE_MSGBOX, !""SERVER"Команды {FFFFFF}четвёртого уровня",
-							!""SERVER"/setweather{FFFFFF} - установить погоду на сервере\n\
-							"SERVER"/reginfo{FFFFFF} - сравнить регистрационные данные игрока с текущими",
+						!""SERVER"/setweather{FFFFFF} - установить погоду на сервере\n\
+						"SERVER"/reginfo{FFFFFF} - сравнить регистрационные данные игрока с текущими\n\
+						"SERVER"/ban{FFFFFF} - забанить игрока",
 						!"Назад", "Закрыть");
 					}
 					case 4:
 					{
 					    ShowPlayerDialog(playerid, dAhelpCMD, DIALOG_STYLE_MSGBOX, !""SERVER"Команды {FFFFFF}пятого уровня",
-							!"",
+						!""SERVER"/iban{FFFFFF} - навсегда забанить игрока\n\
+						"SERVER"/offban{FFFFFF} - забанить в оффлайне игрока\n\
+						"SERVER"/banip{FFFFFF} - заблокировать по IP игрока\n\
+						"SERVER"/offbanip{FFFFFF} - заблокировать IP\n\
+						"SERVER"/unban{FFFFFF} - разблокировать игрока",
 						!"Назад", "Закрыть");
 					}
 					case 5:
 					{
 					    ShowPlayerDialog(playerid, dAhelpCMD, DIALOG_STYLE_MSGBOX, !""SERVER"Команды {FFFFFF}шестого уровня",
-							!""SERVER"/resetadm{FFFFFF} - снять администратора\n\
-							"SERVER"/resetadmoff{FFFFFF} - снять администратора в оффлайне",
+					    !""SERVER"/ibanip{FFFFFF} - навсегда заблокировать IP\n\
+					    "SERVER"/unbanip{FFFFFF} - разблокировать IP",
 						!"Назад", "Закрыть");
 					}
 				}
@@ -2049,16 +1262,16 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response)
 		    {
-		        if(!(0 <= str_len <= 97))
+		        if(!(0 <= strlen(inputtext) <= 97))
 				{
 				    ShowPlayerDialog(playerid, dQuestion, DIALOG_STYLE_INPUT, !"{FFFFFF}Задать{11dd77} вопрос",
-						!"{FFFFFF}Перед тем, как отправлять жалобу администрации, удостоверьтесь что вы не нарушаете нижеуказанные правила:\n\n\
-						\t\t\t{e91432}Запрещено:\n\
-						\t\t\t1. Писать жалобы (Для этого есть раздел \"{FFFFFF}Написать {e93230}жалобу{e91432}\")\n\
-						\t\t\t2. Флуд, капс, оскорбления, оффтоп.\n\
-						\t\t\t3. Просьбы по типу - \"Дайте денег, дайте лвл\"\n\n\
-						{FFFFFF}При нарушении вышеуказанных правил администратор может наказать вас различными для этого средствами.\n\
-						Помните, что ваш вопрос не единственный, администрации нужно время на обработку всех поступающих вопросов",
+					!"{FFFFFF}Перед тем, как отправлять жалобу администрации, удостоверьтесь что вы не нарушаете нижеуказанные правила:\n\n\
+					\t\t\t{e91432}Запрещено:\n\
+					\t\t\t1. Писать жалобы (Для этого есть раздел \"{FFFFFF}Написать {e93230}жалобу{e91432}\")\n\
+					\t\t\t2. Флуд, капс, оскорбления, оффтоп.\n\
+					\t\t\t3. Просьбы по типу - \"Дайте денег, дайте лвл\"\n\n\
+					{FFFFFF}При нарушении вышеуказанных правил администратор может наказать вас различными для этого средствами.\n\
+					Помните, что ваш вопрос не единственный, администрации нужно время на обработку всех поступающих вопросов",
 					!"Отправить", !"Назад");
 					return SendErrorMessage(playerid, !"Слишком длинное сообщение");
 				}
@@ -2070,78 +1283,6 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		    }
 		    else ShowPlayerDialog(playerid, dInformadm, DIALOG_STYLE_LIST, !""SERVER"Связь с администрацией", !"Написать {e93230}жалобу\nЗадать {11dd77}вопрос", !"Выбрать", !"Назад");
 		}	
-	}
-	return true;
-}
-
-function: PlayerLogin(playerid)
-{
-    static rows;
-	cache_get_row_count(rows);
-	if(rows)
-	{
-        cache_get_value_name_int(0, !"pID", PlayerInfo[playerid][pID]);
-        cache_get_value_name(0, !"pEmail", PlayerInfo[playerid][pEmail], 65);
-        cache_get_value_name_int(0, !"pRef", PlayerInfo[playerid][pRef]);
-        cache_get_value_name_int(0, !"pRefmoney", PlayerInfo[playerid][pRefmoney]);
-        cache_get_value_name_int(0, !"pSex", PlayerInfo[playerid][pSex]);
-        cache_get_value_name_int(0, !"pRace", PlayerInfo[playerid][pRace]);
-        cache_get_value_name_int(0, !"pAge", PlayerInfo[playerid][pAge]);
-        cache_get_value_name_int(0, !"pSkin", PlayerInfo[playerid][pSkin]);
-        cache_get_value_name(0, !"pRegdate", PlayerInfo[playerid][pRegdate], 13);
-        cache_get_value_name(0, !"pRegip", PlayerInfo[playerid][pRegip], 16);
-        cache_get_value_name_int(0, !"pAdmin", PlayerInfo[playerid][pAdmin]);
-        cache_get_value_name_int(0, !"pMoney", PlayerInfo[playerid][pMoney]);
-        cache_get_value_name_int(0, !"pLvl", PlayerInfo[playerid][pLvl]);
-        cache_get_value_name_int(0, !"pExp", PlayerInfo[playerid][pExp]);
-        
-        if(PlayerInfo[playerid][pRefmoney] != 0)
-        {
-            SendClientMessage(playerid, COLOR_LIGHTBLUE, !"Вы получили вознаграждение за приглашённых на сервер игроков.");
-            GiveMoney(playerid, PlayerInfo[playerid][pRefmoney]);
-            PlayerInfo[playerid][pRefmoney] = 0;
-            static const fmt_query[] = "UPDATE "TABLE_ACCOUNT" SET `pRefmoney` = '0' WHERE `pID` = '%d'";
-			new query[sizeof(fmt_query)+(-2+8)];
-			mysql_format(dbHandle, query, sizeof(query), fmt_query, PlayerInfo[playerid][pID]);
-			mysql_tquery(dbHandle, query);
-        }
-        
-        if(PlayerInfo[playerid][pAdmin] > 0) Iter_Add(Admins_ITER, playerid);
-
-		SetSpawnInfo(playerid, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-		
-		PlayerInfo[playerid][pLogged] = true;
-	    TogglePlayerSpectating(playerid, 0);
-	} else {
-		SendClientMessage(playerid, COLOR_RED, !"Уважаемый игрок! В данный момент некие проблемы с сервером!");
-		SendClientMessage(playerid, COLOR_RED, !"База данных перегружена и не может обработать Ваш аккаунт!");
-		SendClientMessage(playerid, COLOR_RED, !"Зайдите через некоторое время (через 2-5 минут).");
-		SendClientMessage(playerid, COLOR_RED, !"Мы делаем все, чтобы защитить Ваш аккаунт от слета!");
-		SendClientMessage(playerid, COLOR_RED, !"По возможности отправьте скриншот (F8) с этой записью!");
-		printf("["SERVER_NAME3"] Error Load Account. %s", PlayerInfo[playerid][pName]);
-		return KickEx(playerid);
-	}
-	return true;
-}
-
-function: CheckReferal(playerid, const referal[])
-{
-	static rows;
-	cache_get_row_count(rows);
-	if(rows)
-	{
-	    cache_get_value_name_int(0, !"pID", PlayerInfo[playerid][pRef]);
-	    ShowPlayerDialog(playerid, dRegSex, DIALOG_STYLE_MSGBOX, !""SERVER"Регистрация{FFFFFF} • Выбор пола персонажа",
-			!"{FFFFFF}Выберите пол вашего персонажа:",
-		!"Мужской", !"Женский");
-	}
-	else
-	{
-	    ShowPlayerDialog(playerid, dRegRef, DIALOG_STYLE_INPUT, !""SERVER"Регистрация{FFFFFF} • Ввод пригласившего",
-			!"{FFFFFF}Если ты зашёл на сервер по приглашению, то\n\
-			можешь указать ник пригласившего в поле ниже:",
-		!"Далее", !"Пропустить");
-        return SendErrorMessage(playerid, !"Аккаунта с таким ником не существует");
 	}
 	return true;
 }
@@ -2169,12 +1310,12 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 {
 	if(playertextid == GraphicPIN_PTD[playerid][0] || playertextid == GraphicPIN_PTD[playerid][1] || playertextid == GraphicPIN_PTD[playerid][2] || playertextid == GraphicPIN_PTD[playerid][3])
     {
-        if(playertextid == GraphicPIN_PTD[playerid][0]) PlayerInfo[playerid][tempENTEREDPIN][GetPVarInt(playerid, "pinpos")] = PlayerInfo[playerid][tempPINCHECK][0];
-        else if(playertextid == GraphicPIN_PTD[playerid][1]) PlayerInfo[playerid][tempENTEREDPIN][GetPVarInt(playerid, "pinpos")] = PlayerInfo[playerid][tempPINCHECK][1];
-        else if(playertextid == GraphicPIN_PTD[playerid][2]) PlayerInfo[playerid][tempENTEREDPIN][GetPVarInt(playerid, "pinpos")] = PlayerInfo[playerid][tempPINCHECK][2];
-        else if(playertextid == GraphicPIN_PTD[playerid][3]) PlayerInfo[playerid][tempENTEREDPIN][GetPVarInt(playerid, "pinpos")] = PlayerInfo[playerid][tempPINCHECK][3];
+        if(playertextid == GraphicPIN_PTD[playerid][0]) PlayerInfo[playerid][tempENTEREDPIN][GetPVarInt(playerid, !"pinpos")] = PlayerInfo[playerid][tempPINCHECK][0];
+        else if(playertextid == GraphicPIN_PTD[playerid][1]) PlayerInfo[playerid][tempENTEREDPIN][GetPVarInt(playerid, !"pinpos")] = PlayerInfo[playerid][tempPINCHECK][1];
+        else if(playertextid == GraphicPIN_PTD[playerid][2]) PlayerInfo[playerid][tempENTEREDPIN][GetPVarInt(playerid, !"pinpos")] = PlayerInfo[playerid][tempPINCHECK][2];
+        else if(playertextid == GraphicPIN_PTD[playerid][3]) PlayerInfo[playerid][tempENTEREDPIN][GetPVarInt(playerid, !"pinpos")] = PlayerInfo[playerid][tempPINCHECK][3];
         PlayerPlaySound(playerid, 4203, 0.0, 0.0, 0.0);
-        if(GetPVarInt(playerid, "pinpos") == 3)
+        if(GetPVarInt(playerid, !"pinpos") == 3)
 		{
 		    new truepin[5];
 			valstr(truepin, PlayerInfo[playerid][pPin][0]);
@@ -2185,7 +1326,7 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 		        PlayerTextDrawDestroy(playerid, GraphicPIN_PTD[playerid][i]);
 		    }
 		    TextDrawHideForPlayer(playerid, GraphicPIN_TD);
-		    DeletePVar(playerid, "pinpos");
+		    DeletePVar(playerid, !"pinpos");
 		    CancelSelectTextDraw(playerid);
 			if(strcmp(truepin, enteredpin, false) == 0)
 			{
@@ -2211,8 +1352,8 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 		}
 		else
 		{
-		    SetPVarInt(playerid, "pinpos", GetPVarInt(playerid, "pinpos")+1);
-		    GeneratePinCheck(playerid, GetPVarInt(playerid, "pinpos"));
+		    SetPVarInt(playerid, !"pinpos", GetPVarInt(playerid, !"pinpos")+1);
+		    GeneratePinCheck(playerid, GetPVarInt(playerid, !"pinpos"));
 		}
     }
     return true;
@@ -2229,150 +1370,7 @@ public OnPlayerCommandReceived(playerid, cmd[], params[], flags)
     AntiFloodCommand[playerid] = gettime() + 2;
     return true;
 }
-
-stock GiveMoney(playerid, money)
-{
-	PlayerInfo[playerid][pMoney] += money;
-	static const fmt_query[] = "UPDATE "TABLE_ACCOUNT" SET `pMoney` = '%d' WHERE `pID` = '%d'";
-	new query[sizeof(fmt_query)+(-2+9)+(-2+8)];
-	format(query, sizeof(query), fmt_query, PlayerInfo[playerid][pMoney], PlayerInfo[playerid][pID]);
-	mysql_tquery(dbHandle, query);
-}
-
-stock ProxDetector(Float:radi, playerid, string[],col1,col2,col3,col4,col5)
-{
-	new Float:posx, Float:posy, Float:posz, Float:oldposx, Float:oldposy, Float:oldposz, Float:tempposx, Float:tempposy, Float:tempposz;
-	GetPlayerPos(playerid, oldposx, oldposy, oldposz);
-	foreach(new i: Player)
-	{
-		if(IsPlayerConnected(i))
-		{
-		    if(GetPlayerVirtualWorld(playerid) == GetPlayerVirtualWorld(i))
-			{
-				GetPlayerPos(i, posx, posy, posz);
-				tempposx = (oldposx -posx);
-				tempposy = (oldposy -posy);
-				tempposz = (oldposz -posz);
-				if(((tempposx < radi/16) && (tempposx > -radi/16)) && ((tempposy < radi/16) && (tempposy > -radi/16)) && ((tempposz < radi/16) && (tempposz > -radi/16))) SendClientMessage(i, col1, string);
-				else if(((tempposx < radi/8) && (tempposx > -radi/8)) && ((tempposy < radi/8) && (tempposy > -radi/8)) && ((tempposz < radi/8) && (tempposz > -radi/8))) SendClientMessage(i, col2, string);
-				else if(((tempposx < radi/4) && (tempposx > -radi/4)) && ((tempposy < radi/4) && (tempposy > -radi/4)) && ((tempposz < radi/4) && (tempposz > -radi/4))) SendClientMessage(i, col3, string);
-				else if(((tempposx < radi/2) && (tempposx > -radi/2)) && ((tempposy < radi/2) && (tempposy > -radi/2)) && ((tempposz < radi/2) && (tempposz > -radi/2))) SendClientMessage(i, col4, string);
-				else if(((tempposx < radi) && (tempposx > -radi)) && ((tempposy < radi) && (tempposy > -radi)) && ((tempposz < radi) && (tempposz > -radi))) SendClientMessage(i, col5, string);
-			}
-		}
-	}
-	return true;
-}
-
-stock GiveExp(playerid, exp)
-{
-	PlayerInfo[playerid][pExp] += exp;
-	new needexp = (PlayerInfo[playerid][pLvl]+1)*expmultiply;
-    if(PlayerInfo[playerid][pExp] >= needexp)
-    {
-        PlayerInfo[playerid][pExp]-=needexp;
-        PlayerInfo[playerid][pLvl]++;
-        SendClientMessage(playerid, -1, !"Ваш уровень повышен");
-        if(PlayerInfo[playerid][pLvl] == 3 && PlayerInfo[playerid][pRef] != 0)
-        {
-            SendClientMessage(playerid, COLOR_BLUE, !"Вы достигли третьего уровня. Игрок, пригласивший вас на сервер получит вознаграждение.");
-			new newquery[71+(-2+8)];
-			format(newquery, sizeof(newquery), "UPDATE "TABLE_ACCOUNT" SET `pRefmoney` =  `pRefmoney` + '5000' WHERE `pID` = '%d'", PlayerInfo[playerid][pRef]);
-			mysql_tquery(dbHandle, newquery);
-        }
-        SetPlayerScore(playerid, PlayerInfo[playerid][pLvl]);
-    }
-    static const fmt_query[] = "UPDATE "TABLE_ACCOUNT" SET `pLvl` = '%d', `pExp` = '%d' WHERE `pID` = '%d'";
-	new query[sizeof(fmt_query)+(-2+10)+(-2+6)+(-2+8)];
-	format(query, sizeof(query), fmt_query, PlayerInfo[playerid][pLvl], PlayerInfo[playerid][pExp], PlayerInfo[playerid][pID]);
-	mysql_tquery(dbHandle, query);
-}
-
-stock ShowStats(playerid, checkadm)
-{
-    new needexp = (PlayerInfo[playerid][pLvl]+1)*expmultiply;
-	new dialog[256];
-	format(dialog, sizeof(dialog),
-		"{FFFFFF}Ник:\t\t"SERVER"%s\n\
-		{FFFFFF}Пол:\t\t"SERVER"%s\n\
-		{FFFFFF}Раса:\t\t"SERVER"%s\n\
-		{FFFFFF}Возраст:\t"SERVER"%d лет/год\n\
-		{FFFFFF}Уровень:\t"SERVER"%d\n\
-		{FFFFFF}Опыт:\t\t"SERVER"%d/%d\n",
-	pName(playerid),
-	(PlayerInfo[playerid][pSex] == 1) ? ("Мужской") : ("Женский"),
-	PlayerRaces[PlayerInfo[playerid][pRace]-1],
-	PlayerInfo[playerid][pAge],
-	PlayerInfo[playerid][pLvl],
-	PlayerInfo[playerid][pExp],needexp);
-	if(checkadm == 0) ShowPlayerDialog(playerid, dStats, DIALOG_STYLE_MSGBOX, !""SERVER"Статистика персонажа", dialog, !"Назад", !"Закрыть");
-	else ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_MSGBOX, !""SERVER"Статистика персонажа", dialog, !"Закрыть", "");
-}
-
-stock GetPlayerSubnet(buffer[])
-{
-    for(new i=0, dots=0; ; ++i)
-    {
-    	switch(buffer[i])
-        {
-            case '\0': break;
-            case '.':
-            {
-                if(++dots == 2)
-                {
-                    buffer[i] = '\0';
-                    break;
-                }
-            }
-        }
-    }
-}
-
-stock IsStringIP(const input_string[]) // By SooBad
-{
-	new regex:r_str = regex_new("([1-9]{1})([0-9]{0,2})\\.([0-9]{1,3})\\.([0-9|\\*]){1,3}\\.([0-9|\\*]){1,3}");
-    new check = regex_check(input_string, r_str);
-    regex_delete(r_str);
-    return check;
-}
-
-stock IsRPNick(const input_string[]) // By SooBad
-{
-    new regex:r_str = regex_new("([A-Z]{1})([a-z]+)_([A-Z]{1})([a-z]+)");
-    new check = regex_check(input_string, r_str);
-    regex_delete(r_str);
-    return check;
-}
-
-stock GeneratePinCheck(playerid, pos)
-{
-	new pinstr[5];
-	valstr(pinstr, PlayerInfo[playerid][pPin][0]);
-	new value[2];
-    strmid(value, pinstr, pos, pos+1);
-    new right = strval(value);
-    PlayerInfo[playerid][tempPINCHECK][0] = randomEx(9, right);
-    PlayerInfo[playerid][tempPINCHECK][1] = randomEx(9, right, PlayerInfo[playerid][tempPINCHECK][0]);
-    PlayerInfo[playerid][tempPINCHECK][2] = randomEx(9, right, PlayerInfo[playerid][tempPINCHECK][0], PlayerInfo[playerid][tempPINCHECK][1]);
-    PlayerInfo[playerid][tempPINCHECK][3] = randomEx(9, right, PlayerInfo[playerid][tempPINCHECK][0], PlayerInfo[playerid][tempPINCHECK][1], PlayerInfo[playerid][tempPINCHECK][2]);
-    PlayerInfo[playerid][tempPINCHECK][random(4)] = right;
-    for(new i = 0; i < 4; i++)
-    {
-        new buffer[2];
-        valstr(buffer, PlayerInfo[playerid][tempPINCHECK][i]);
-        PlayerTextDrawSetString(playerid, GraphicPIN_PTD[playerid][i], buffer);
-    }
-}
-
-function: randomEx(const max_value, ...)
-{
-    new result;
-    rerandom: result = random(max_value + 1);
-    for(new i = numargs() + 1; --i != 0;)
-        if(result == getarg(i))
-            goto rerandom;
-    return result;
-}
+// Function's
 
 
 function: CheckBanPlayer(playerid, const name[], days, const reason[], status)
@@ -2382,7 +1380,7 @@ function: CheckBanPlayer(playerid, const name[], days, const reason[], status)
 	if(!rows)
 	{
 		new id;
-		sscanf(name, "u", id);
+		sscanf(name, !"u", id);
 		if(id == INVALID_PLAYER_ID) ServerBan(name, playerid, reason, days, status);
 		else SendErrorMessage(playerid, !"Игрок подключён! Используйте /ban!");
 	}
@@ -2433,9 +1431,8 @@ function: UnBanIp(playerid, const ip[])
 
 function: FindPlayerInTableBanlist(playerid)
 {
-	static rows;
+	static rows,hour, minute, string[183+MAX_PLAYER_NAME+MAX_PLAYER_NAME+30+18+18];
 	cache_get_row_count(rows);
-	new hour, minute, string[183+MAX_PLAYER_NAME+MAX_PLAYER_NAME+30+18+18];
 	gettime(hour, minute);
  	SetPlayerTime(playerid, hour, minute);
  	InterpolateCameraPos(playerid, -2558.0396, 1335.6434, 12.0365, -2627.4841, 1505.5416, 80.8923, 5000);
@@ -2497,8 +1494,7 @@ function: FindPlayerInTableBanlist(playerid)
 
 function: FindPlayerInTableBanlistIp(playerid)
 {
-	static rows;
-	new string[183+MAX_PLAYER_NAME+MAX_PLAYER_NAME+30+18+18];
+	static rows, string[183+MAX_PLAYER_NAME+MAX_PLAYER_NAME+30+18+18];
 	cache_get_row_count(rows);
 	if(rows)
 	{
@@ -2566,7 +1562,7 @@ function: CheckRegistration(playerid)
 	    cache_get_value_name(0, !"pSalt", PlayerInfo[playerid][pSalt], 11);
 	    new buffer[14];
         cache_get_value_name(0, !"pPin", buffer, 16);
-        sscanf(buffer, "p<,>a<i>[2]", PlayerInfo[playerid][pPin]);
+        sscanf(buffer, !"p<,>a<i>[2]", PlayerInfo[playerid][pPin]);
         cache_get_value_name(0, !"pLastip", PlayerInfo[playerid][pLastip], 16);
         cache_get_value_name(0, !"pGoogleauth", PlayerInfo[playerid][pGoogleauth], 17);
         cache_get_value_name_int(0, !"pGs", PlayerInfo[playerid][pGoogleauthsetting]);
@@ -2574,6 +1570,1027 @@ function: CheckRegistration(playerid)
 	}
 	else ShowRegistration(playerid);
 	return true;
+}
+
+function: KickPlayer(playerid) Kick(playerid);
+function: StopChatAnim(playerid) return ApplyAnimation(playerid, !"PED", !"facanger", 4.1, 0, 1, 1, 1, 1);
+
+function: PayDay()
+{
+	new _mins, _seconds;
+	gettime(_, _mins, _seconds);
+	SetTimer(!"PayDay", ((60-_mins)*1000*60)+(60-_seconds)*10, false); // PayDay System
+	foreach(new i:Player)
+	{
+		if(PlayerInfo[i][pTimePlayed] >= 300) GiveExp(i, 1);
+	}
+	return printf("["SERVER_NAME3"] PayDay будет через %dм:%dс.", (60-_mins), (60-_seconds));
+}
+
+function: GrandTimer()
+{
+	return false;
+}
+
+function: PlayerSecondTimer(playerid)
+{
+	if(PlayerInfo[playerid][pLogged])
+	{
+		if(GetPlayerMoney(playerid) != PlayerInfo[playerid][pMoney])
+		{
+		    ResetPlayerMoney(playerid);
+		    GivePlayerMoney(playerid, PlayerInfo[playerid][pMoney]);
+		}
+	    PlayerAFK[playerid]++;
+	    if(PlayerAFK[playerid] >= 3)
+	    {
+	        new string[35];
+	        format(string, sizeof(string), "%s {FFFFFF}%d сек",(PlayerAFK[playerid]) < 300 ? "{00e5ff}[Кушает]" : (PlayerAFK[playerid]) < 1800 ? "{e0ff00}[Отошел]" : "{ff6d00}[Гуляет]", PlayerAFK[playerid]);
+	        SetPlayerChatBubble(playerid, string, -1, 20, 1050);
+	    }
+	    PlayerInfo[playerid][pTimePlayed]++;
+	    if(pPickupID[playerid])
+	    {
+	        new pickupid = pPickupID[playerid];
+	        if(!IsValidDynamicPickup(pickupid)) pPickupID[playerid] = 0;
+	        else
+	        {
+	            new Float:pPosX, 
+	            	Float:pPosY, 
+	            	Float:pPosZ;
+	            Streamer_GetFloatData(STREAMER_TYPE_PICKUP, pickupid, E_STREAMER_X, pPosX);
+	            Streamer_GetFloatData(STREAMER_TYPE_PICKUP, pickupid, E_STREAMER_Y, pPosY);
+	            Streamer_GetFloatData(STREAMER_TYPE_PICKUP, pickupid, E_STREAMER_Z, pPosZ);
+	            if(!IsPlayerInRangeOfPoint(playerid, 2.0, pPosX, pPosY, pPosZ)) pPickupID[playerid] = 0;
+	        }
+	    }
+	}
+	return true;
+}
+
+function: FindMyReferals(playerid)
+{
+    static rows;
+	cache_get_row_count(rows);
+	if(rows)
+	{
+	    new dialog[2048] = "Никнейм\tУровень", refname[MAX_PLAYER_NAME], reflvl;
+	    for(new i = 0; i < rows; i++)
+	    {
+	        cache_get_value_name(i, !"pName", refname, MAX_PLAYER_NAME);
+	        cache_get_value_name_int(i, !"pName", reflvl);
+			format(dialog, sizeof(dialog), "%s\n%s\t%d", dialog, refname, reflvl);
+	    }
+	    ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_TABLIST_HEADERS, !""SERVER"Ваши рефералы", dialog, !"Закрыть", "");
+	}
+	else ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_MSGBOX, !""SERVER"Ваши рефералы", "{FFFFFF}У вас нет рефералов", !"Закрыть", "");
+	return true;
+}
+
+function: LoginTimeExpired(playerid)
+{
+	if(!PlayerInfo[playerid][pLogged])
+	{
+	    SendClientMessage(playerid, COLOR_LIGHTRED, !"Время на авторизацию ограничено.");
+	    SendClientMessage(playerid, COLOR_LIGHTRED, !"Введите /q(/quit) чтобы выйти!");
+	    ShowPlayerDialog(playerid, -1, 0, " ", " ", " ", " ");
+	    KickEx(playerid);
+	}
+	return false;
+}
+
+function: OnCheatDetected(playerid, ip_address[], type, code)
+{
+	switch(code)
+	{
+		case 38: 
+		{
+			SendClientMessage(playerid, COLOR_RED, !"ВНИМАНИЕ! У Вас слабое интернет соединение");
+			SendClientMessage(playerid, COLOR_RED, !"Для более комфортной игры необходимо оптимизировать работу сетевого экрана ПК!");
+			SendClientMessage(playerid, COLOR_RED, !"А также, настоятельно рекомендуем Вам проверить ПК на присутствие вредоносного ПО!");
+			return true;
+		}
+		default:
+		{
+			new _year, 
+				_month, 
+				_day;
+			getdate( _year, _month, _day);
+			static const fmt_str[] = "\
+			{FF00AA}Вы были отсоединены от сервера Анти-Чит системой.\n\n\
+			{FFFFFF}Не исключено, что это могло произойти по ошибке, в таком случае, приносим свои извинения.\n\
+			{CECECE}Ник-Нейм: "SERVER"%s\n\
+			{CECECE}Идентификатор: "SERVER"#%03i\n\
+			{CECECE}Задержка: "SERVER"%i мс.\n\
+			{CECECE}Время на момент срабатывания: "SERVER"%02d:%02d:%02d\n\n\
+			\t{FF6347}Напоминаем, что использование чит-программ наказывается блокировкой аккаунта!";
+			new string[sizeof(fmt_str)+(-2+MAX_PLAYER_NAME)+(-4+3)+(-2+3)+(-12+11)];
+			format(string, sizeof(string), fmt_str, pName(playerid), code, GetPlayerPing(playerid), _year, _month, _day);
+			ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_MSGBOX, !""SERVER"Анти-Чит", string, !"Понял", "");
+			AntiCheatKickWithDesync(playerid, code); // Для логов в консоль
+			format(string, sizeof(string), "[Nex-AC] %s[%d] был(а) кикнут за использование чит чит-программ. Код: #%03i", pName(playerid), playerid, code);
+			SendAdminMessage(COLOR_TOMATO, string);
+		}
+	}
+	return true;
+}
+
+function: PlayerLogin(playerid)
+{
+    static rows;
+	cache_get_row_count(rows);
+	if(rows)
+	{
+        cache_get_value_name_int(0, !"pID", PlayerInfo[playerid][pID]);
+        cache_get_value_name(0, !"pEmail", PlayerInfo[playerid][pEmail], 65);
+        cache_get_value_name_int(0, !"pRef", PlayerInfo[playerid][pRef]);
+        cache_get_value_name_int(0, !"pRefmoney", PlayerInfo[playerid][pRefmoney]);
+        cache_get_value_name_int(0, !"pSex", PlayerInfo[playerid][pSex]);
+        cache_get_value_name_int(0, !"pRace", PlayerInfo[playerid][pRace]);
+        cache_get_value_name_int(0, !"pAge", PlayerInfo[playerid][pAge]);
+        cache_get_value_name_int(0, !"pSkin", PlayerInfo[playerid][pSkin]);
+        cache_get_value_name(0, !"pRegdate", PlayerInfo[playerid][pRegdate], 13);
+        cache_get_value_name(0, !"pRegip", PlayerInfo[playerid][pRegip], 16);
+        cache_get_value_name_int(0, !"pAdmin", PlayerInfo[playerid][pAdmin]);
+        cache_get_value_name_int(0, !"pMoney", PlayerInfo[playerid][pMoney]);
+        cache_get_value_name_int(0, !"pLvl", PlayerInfo[playerid][pLvl]);
+        cache_get_value_name_int(0, !"pExp", PlayerInfo[playerid][pExp]);
+        
+        if(PlayerInfo[playerid][pRefmoney] != 0)
+        {
+            SendClientMessage(playerid, COLOR_LIGHTBLUE, !"Вы получили вознаграждение за приглашённых на сервер игроков.");
+            GiveMoney(playerid, PlayerInfo[playerid][pRefmoney]);
+            PlayerInfo[playerid][pRefmoney] = 0;
+            static const fmt_query[] = "UPDATE "TABLE_ACCOUNT" SET `pRefmoney` = '0' WHERE `pID` = '%d'";
+			new query[sizeof(fmt_query)+(-2+8)];
+			mysql_format(dbHandle, query, sizeof(query), fmt_query, PlayerInfo[playerid][pID]);
+			mysql_tquery(dbHandle, query);
+        }
+        
+        if(PlayerInfo[playerid][pAdmin] > 0) Iter_Add(Admins_ITER, playerid);
+
+		SetSpawnInfo(playerid, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		
+		PlayerInfo[playerid][pLogged] = true;
+	    TogglePlayerSpectating(playerid, 0);
+	} else {
+		SendClientMessage(playerid, COLOR_RED, !"Уважаемый игрок! В данный момент некие проблемы с сервером!");
+		SendClientMessage(playerid, COLOR_RED, !"База данных перегружена и не может обработать Ваш аккаунт!");
+		SendClientMessage(playerid, COLOR_RED, !"Зайдите через некоторое время (через 2-5 минут).");
+		SendClientMessage(playerid, COLOR_RED, !"Мы делаем все, чтобы защитить Ваш аккаунт от слета!");
+		SendClientMessage(playerid, COLOR_RED, !"По возможности отправьте скриншот (F8) с этой записью!");
+		printf("["SERVER_NAME3"] Error Load Account. %s", PlayerInfo[playerid][pName]);
+		return KickEx(playerid);
+	}
+	return true;
+}
+
+function: CheckReferal(playerid, const referal[])
+{
+	static rows;
+	cache_get_row_count(rows);
+	if(rows)
+	{
+	    cache_get_value_name_int(0, !"pID", PlayerInfo[playerid][pRef]);
+	    ShowPlayerDialog(playerid, dRegSex, DIALOG_STYLE_MSGBOX, !""SERVER"Регистрация{FFFFFF} • Выбор пола персонажа",
+		!"{FFFFFF}Выберите пол вашего персонажа:",
+		!"Мужской", !"Женский");
+	}
+	else
+	{
+	    ShowPlayerDialog(playerid, dRegRef, DIALOG_STYLE_INPUT, !""SERVER"Регистрация{FFFFFF} • Ввод пригласившего",
+		!"{FFFFFF}Если ты зашёл на сервер по приглашению, то\n\
+		можешь указать ник пригласившего в поле ниже:",
+		!"Далее", !"Пропустить");
+        return SendErrorMessage(playerid, !"Аккаунта с таким ником не существует");
+	}
+	return true;
+}
+
+// Stok's
+
+stock KickEx(playerid, delay = DELAY_TO_KICK)
+{
+	if(!IsPlayerConnected(playerid)) return false;
+	SetTimerEx(!"KickPlayer", delay, false, !"d", playerid);
+	return false;
+}
+
+stock LoadMapping()
+{
+	static map_spawn;
+	map_spawn = CreateDynamicObject(5033, 1745.199951, -1882.849975, 26.140600, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 2, 16640, "a51", "concreteyellow256 copy", 0xFFFFFFFF);
+	SetDynamicObjectMaterial(map_spawn, 3, 9901, "ferry_building", "skylight_windows", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 5, 10765, "airportgnd_sfse", "white", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 6, 16640, "a51", "concreteyellow256 copy", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 7, 9901, "ferry_building", "skylight_windows", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 9, 6404, "beafron1_law2", "woodroof01_128", 0x00000000);
+	map_spawn = CreateDynamicObject(4821, 1745.199951, -1882.849975, 26.140600, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 2, 4830, "airport2", "bathtile01_int", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 5, 4552, "ammu_lan2", "sl_lavicdtwall1", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 7, 10765, "airportgnd_sfse", "ws_runwaytarmac", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 8, 7555, "bballcpark1", "ws_carparknew2", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 9, 4829, "airport_las", "sjmlahus28", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 10, 9514, "711_sfw", "mono2_sfe", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1793.759155, -1891.440307, 10.823890, 0.000000, -0.000030, 179.999816, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1793.759155, -1894.499511, 10.823890, 0.000000, -0.000030, 179.999816, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1793.759155, -1897.699218, 10.823890, 0.000000, -0.000030, 179.999816, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1793.759155, -1900.909423, 10.823890, 0.000000, -0.000038, 179.999771, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1793.759155, -1904.118774, 10.823890, 0.000000, -0.000038, 179.999771, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1793.759155, -1907.318481, 10.823890, 0.000000, -0.000038, 179.999771, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1793.759155, -1910.508666, 10.823890, 0.000000, -0.000045, 179.999725, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1793.759155, -1913.718017, 10.823890, 0.000000, -0.000045, 179.999725, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1793.759155, -1916.917724, 10.823890, 0.000000, -0.000045, 179.999725, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1793.759155, -1920.116699, 10.823890, 0.000000, -0.000053, 179.999679, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1793.759155, -1923.145874, 10.823890, 0.000000, -0.000053, 179.999679, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1787.526855, -1891.440307, 10.823890, 0.000000, -0.000045, 179.999725, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1787.526855, -1894.499511, 10.823890, 0.000000, -0.000045, 179.999725, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1787.526855, -1897.699218, 10.823890, 0.000000, -0.000045, 179.999725, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1787.526855, -1900.909423, 10.823890, 0.000000, -0.000053, 179.999679, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1787.526855, -1904.118774, 10.823890, 0.000000, -0.000053, 179.999679, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1787.526855, -1907.318481, 10.823890, 0.000000, -0.000053, 179.999679, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1787.526855, -1910.508666, 10.823890, 0.000000, -0.000061, 179.999633, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1787.526855, -1913.718017, 10.823890, 0.000000, -0.000061, 179.999633, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1787.526855, -1916.917724, 10.823890, 0.000000, -0.000061, 179.999633, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1787.526855, -1920.116699, 10.823890, 0.000000, -0.000068, 179.999588, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1787.526855, -1923.145874, 10.823890, 0.000000, -0.000068, 179.999588, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1792.240234, -1889.920288, 10.813890, 0.000007, 0.000000, 89.999977, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1789.030517, -1889.920288, 10.813890, 0.000007, 0.000000, 89.999977, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1792.240234, -1924.692871, 10.813890, 0.000022, 0.000000, 89.999931, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19399, 1789.030517, -1924.692871, 10.813890, 0.000022, 0.000000, 89.999931, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1890.801025, 12.415001, 0.000000, 90.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1890.801025, 12.395001, 0.000000, 90.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1892.351196, 12.415001, 0.000000, 90.000015, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1892.351196, 12.395001, 0.000000, 90.000015, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1893.871826, 12.415001, 0.000000, 90.000022, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1893.871826, 12.395001, 0.000000, 90.000022, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1895.373046, 12.415001, 0.000000, 90.000030, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1895.373046, 12.395001, 0.000000, 90.000030, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1896.943359, 12.415001, 0.000000, 90.000038, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1896.943359, 12.395001, 0.000000, 90.000038, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1898.523193, 12.415001, 0.000000, 90.000045, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1898.523193, 12.395001, 0.000000, 90.000045, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1900.053466, 12.415001, 0.000000, 90.000053, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1900.053466, 12.395001, 0.000000, 90.000053, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1901.634033, 12.415001, 0.000000, 90.000061, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1901.634033, 12.395001, 0.000000, 90.000061, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1903.185058, 12.415001, 0.000000, 90.000068, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1903.185058, 12.395001, 0.000000, 90.000068, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1904.774291, 12.415001, 0.000000, 90.000083, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1904.774291, 12.395001, 0.000000, 90.000083, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1906.354125, 12.415001, 0.000000, 90.000091, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1906.354125, 12.395001, 0.000000, 90.000091, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1907.934448, 12.415001, 0.000000, 90.000076, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1907.934448, 12.395001, 0.000000, 90.000076, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1909.523681, 12.415001, 0.000000, 90.000091, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1909.523681, 12.395001, 0.000000, 90.000091, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1911.103515, 12.415001, 0.000000, 90.000099, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1911.103515, 12.395001, 0.000000, 90.000099, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1912.684692, 12.415001, 0.000000, 90.000083, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1912.684692, 12.395001, 0.000000, 90.000083, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1914.273925, 12.415001, 0.000000, 90.000099, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1914.273925, 12.395001, 0.000000, 90.000099, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1915.853759, 12.415001, 0.000000, 90.000106, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1915.853759, 12.395001, 0.000000, 90.000106, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1917.424438, 12.415001, 0.000000, 90.000091, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1917.424438, 12.395001, 0.000000, 90.000091, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1919.013671, 12.415001, 0.000000, 90.000106, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1919.013671, 12.395001, 0.000000, 90.000106, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1920.593505, 12.415001, 0.000000, 90.000114, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1920.593505, 12.395001, 0.000000, 90.000114, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1922.194824, 12.415001, 0.000000, 90.000114, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1922.194824, 12.395001, 0.000000, 90.000114, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1791.962036, -1923.774658, 12.415001, 0.000000, 90.000122, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(19430, 1789.321166, -1923.774658, 12.395001, 0.000000, 90.000122, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10101, "2notherbuildsfe", "Bow_church_grass_alt", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1809.586669, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1805.426879, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1801.266357, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1797.105834, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1792.965820, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1784.684692, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1788.845581, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1780.545288, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1776.406616, -1884.309814, 13.100625, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1774.305297, -1886.370849, 13.100625, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1774.305297, -1890.531372, 13.100625, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1774.305297, -1896.791625, 13.100625, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1774.305297, -1903.251831, 13.100625, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1774.305297, -1907.412353, 13.100625, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1774.305297, -1919.474975, 13.100625, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1774.305297, -1931.514770, 13.100625, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1774.305297, -1933.584594, 13.100625, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1776.366821, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1780.517211, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1784.688354, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1788.828979, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1792.969848, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1797.110473, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1801.261230, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1804.701171, -1935.695678, 13.100625, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1806.802612, -1933.633789, 13.100625, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1806.802612, -1929.503173, 13.100625, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1806.802612, -1925.372436, 13.100625, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1806.802612, -1921.241943, 13.100625, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1806.802612, -1917.111083, 13.100625, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1806.802612, -1913.011108, 13.100625, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1806.802612, -1908.900878, 13.100625, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1806.802612, -1904.770629, 13.100625, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1806.802612, -1901.370971, 13.100625, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(970, 1807.874877, -1897.508911, 13.100625, 0.000000, 0.000000, -120.900039, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 6284, "bev_law2", "glass_fence_64hv", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 1, 10101, "2notherbuildsfe", "Bow_Abpave_Gen", 0x00000000);
+	map_spawn = CreateDynamicObject(19377, 1770.328735, -1883.590087, 19.347818, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10765, "airportgnd_sfse", "white", 0xFFFFFFFF);
+	SetDynamicObjectMaterial(map_spawn, 5, -1, "none", "none", 0xFFFFFFFF);
+	map_spawn = CreateDynamicObject(19377, 1757.208496, -1883.600097, 19.297822, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 10765, "airportgnd_sfse", "white", 0x00000000);
+	SetDynamicObjectMaterial(map_spawn, 5, 14668, "711c", "forumstand1_LAe", 0x00000000);
+	map_spawn = CreateDynamicObject(19377, 1742.139282, -1864.908569, 20.338226, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 9901, "ferry_building", "skylight_windows", 0x00000000);
+	map_spawn = CreateDynamicObject(19477, 1763.433959, -1883.731689, 16.135526, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	SetDynamicObjectMaterial(map_spawn, 0, 19962, "samproadsigns", "streetsign", 0x00000000);
+	/////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////
+	map_spawn = CreateDynamicObject(4853, 1735.969970, -1951.219970, 15.050000, 356.859985, 0.000000, 0.140000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1810.049072, -1889.770141, 10.663887, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19426, 1800.661743, -1889.771484, 10.665992, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1806.839233, -1889.770141, 10.663887, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1803.629272, -1889.770141, 10.663887, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19426, 1798.441284, -1889.771484, 10.665992, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1795.410156, -1889.770141, 10.663887, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1792.240234, -1889.770141, 10.663887, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1789.030517, -1889.770141, 10.663887, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1787.359985, -1891.290161, 10.663887, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1787.359985, -1894.499511, 10.663887, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1787.359985, -1897.699218, 10.663887, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1787.359985, -1900.909423, 10.663887, 0.000000, -0.000007, 179.999954, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1787.359985, -1904.118774, 10.663887, 0.000000, -0.000007, 179.999954, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1787.359985, -1907.318481, 10.663887, 0.000000, -0.000007, 179.999954, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1787.359985, -1910.508666, 10.663887, 0.000000, -0.000015, 179.999908, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1787.359985, -1913.718017, 10.663887, 0.000000, -0.000015, 179.999908, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1787.359985, -1916.917724, 10.663887, 0.000000, -0.000015, 179.999908, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1787.359985, -1920.116699, 10.663887, 0.000000, -0.000022, 179.999862, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1787.359985, -1923.326049, 10.663887, 0.000000, -0.000022, 179.999862, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1792.260253, -1924.833740, 10.663887, 0.000007, 0.000000, 89.999977, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1789.050537, -1924.833740, 10.663887, 0.000007, 0.000000, 89.999977, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1793.939331, -1891.450317, 10.663887, 0.000000, -0.000015, 179.999908, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1793.939331, -1894.499511, 10.663887, 0.000000, -0.000015, 179.999908, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1793.939331, -1897.699218, 10.663887, 0.000000, -0.000015, 179.999908, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1793.939331, -1900.909423, 10.663887, 0.000000, -0.000022, 179.999862, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1793.939331, -1904.118774, 10.663887, 0.000000, -0.000022, 179.999862, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1793.939331, -1907.318481, 10.663887, 0.000000, -0.000022, 179.999862, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1793.939331, -1910.508666, 10.663887, 0.000000, -0.000030, 179.999816, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1793.939331, -1913.718017, 10.663887, 0.000000, -0.000030, 179.999816, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1793.939331, -1916.917724, 10.663887, 0.000000, -0.000030, 179.999816, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1793.939331, -1920.116699, 10.663887, 0.000000, -0.000038, 179.999771, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1793.939331, -1923.326049, 10.663887, 0.000000, -0.000038, 179.999771, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(738, 1790.949218, -1892.332153, 12.525765, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(738, 1790.949218, -1900.103515, 12.525765, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(738, 1790.949218, -1908.074462, 12.525765, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(738, 1790.949218, -1915.724365, 12.525765, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(738, 1790.949218, -1922.793945, 12.525765, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1791.737426, -1905.977294, 12.730065, 0.000000, 0.000015, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1789.365966, -1904.137207, 12.730065, 0.000007, -0.000013, 152.299896, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1791.996826, -1901.879638, 12.730065, 0.000007, -0.000013, 152.299896, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1789.636108, -1894.094848, 12.730065, 0.000000, 0.000015, 179.699859, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1791.997924, -1895.947265, 12.730065, 0.000007, -0.000013, -28.000148, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1789.355224, -1898.191162, 12.730065, 0.000007, -0.000013, -28.000148, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1789.636108, -1909.554687, 12.730065, 0.000000, 0.000007, 179.699813, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1791.997924, -1911.407104, 12.730065, 0.000003, -0.000006, -28.000148, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1789.355224, -1913.651000, 12.730065, 0.000003, -0.000006, -28.000148, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1791.737426, -1921.236450, 12.730065, 0.000000, 0.000022, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1789.365966, -1919.396362, 12.730065, 0.000010, -0.000020, 152.299865, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1791.996826, -1917.138793, 12.730065, 0.000010, -0.000020, 152.299865, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1792.328247, -1891.898803, 12.730065, 0.000000, 0.000015, 179.699859, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(870, 1789.067871, -1922.909423, 12.730065, 0.000010, -0.000020, 152.299865, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1257, 1772.523071, -1924.336791, 13.780218, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1257, 1772.523071, -1914.682128, 13.780218, 0.000000, -0.000007, 179.999954, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1775.959594, -1928.577026, 10.663887, -0.000007, -0.000022, -90.000099, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1777.639526, -1927.066162, 10.663887, 0.000000, -0.000015, -0.000122, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1777.639526, -1923.895751, 10.663887, 0.000000, -0.000015, -0.000122, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1777.639526, -1922.025878, 10.663887, 0.000000, -0.000015, -0.000122, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1775.959594, -1920.506835, 10.663887, -0.000007, -0.000022, -90.000099, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1775.959594, -1918.654296, 10.663887, -0.000022, -0.000022, -90.000053, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1777.639526, -1917.143432, 10.663887, -0.000000, 0.000000, -0.000122, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1777.639526, -1913.973022, 10.663887, -0.000000, 0.000000, -0.000122, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1777.639526, -1912.103149, 10.663887, -0.000000, 0.000000, -0.000122, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1775.959594, -1910.584106, 10.663887, -0.000022, -0.000022, -90.000053, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1775.994140, -1919.594116, 10.663887, -0.000022, -0.000022, -54.600097, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1777.639526, -1919.693481, 10.663887, -0.000000, 0.000000, -0.000122, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1790.903442, -1919.114013, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1790.903442, -1912.003417, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1790.903442, -1904.072753, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1790.903442, -1896.202270, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1773.703369, -1896.902954, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1773.703369, -1885.640869, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1773.703369, -1907.551025, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1773.703369, -1919.491821, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1773.703369, -1932.632568, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1784.582397, -1935.983764, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1800.352172, -1935.983764, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1807.192382, -1925.412231, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1807.192382, -1913.182250, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1807.192382, -1903.491943, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1807.192382, -1883.882324, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1232, 1793.901489, -1883.882324, 15.068397, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1810.049072, -1855.069335, 10.663887, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1806.849853, -1855.069335, 10.663887, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1803.639892, -1855.069335, 10.663887, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1800.450561, -1855.069335, 10.663887, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1797.269165, -1855.069335, 10.663887, 0.000007, 0.000000, 89.999977, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1794.069946, -1855.069335, 10.663887, 0.000007, 0.000000, 89.999977, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1790.859985, -1855.069335, 10.663887, 0.000007, 0.000000, 89.999977, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1787.670654, -1855.069335, 10.663887, 0.000007, 0.000000, 89.999977, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1784.459106, -1855.069335, 10.663887, 0.000015, 0.000000, 89.999954, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1781.259887, -1855.069335, 10.663887, 0.000015, 0.000000, 89.999954, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1778.049926, -1855.069335, 10.663887, 0.000015, 0.000000, 89.999954, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1774.860595, -1855.069335, 10.663887, 0.000015, 0.000000, 89.999954, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1771.659667, -1855.069335, 10.663887, 0.000022, 0.000000, 89.999931, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1768.460449, -1855.069335, 10.663887, 0.000022, 0.000000, 89.999931, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1765.250488, -1855.069335, 10.663887, 0.000022, 0.000000, 89.999931, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1762.061157, -1855.069335, 10.663887, 0.000022, 0.000000, 89.999931, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1758.880004, -1855.069335, 10.663887, 0.000030, 0.000000, 89.999908, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1755.680786, -1855.069335, 10.663887, 0.000030, 0.000000, 89.999908, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1752.470825, -1855.069335, 10.663887, 0.000030, 0.000000, 89.999908, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1749.281494, -1855.069335, 10.663887, 0.000030, 0.000000, 89.999908, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1746.071166, -1855.069335, 10.663887, 0.000038, 0.000000, 89.999885, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1742.871948, -1855.069335, 10.663887, 0.000038, 0.000000, 89.999885, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1739.661987, -1855.069335, 10.663887, 0.000038, 0.000000, 89.999885, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1736.472656, -1855.069335, 10.663887, 0.000038, 0.000000, 89.999885, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1732.119506, -1855.069335, 10.663887, 0.000045, 0.000000, 89.999862, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19399, 1727.759155, -1855.069335, 10.663887, 0.000045, 0.000000, 89.999862, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1346, 1771.640869, -1904.566894, 13.998662, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1285, 1768.602661, -1906.901855, 13.110745, 0.000000, 0.000007, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1286, 1768.141723, -1906.896362, 13.132098, 0.000000, 0.000007, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1287, 1767.648681, -1906.875366, 13.142859, 0.000000, 0.000007, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1288, 1767.169799, -1906.849487, 13.153707, 0.000000, 0.000007, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1340, 1758.583984, -1904.406494, 13.609810, 0.000000, 0.000000, 68.800003, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(3862, 1765.959106, -1911.598022, 13.729010, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(3862, 1765.959106, -1916.348388, 13.729010, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(3861, 1765.919189, -1921.492553, 13.736182, 0.000000, 0.000000, 270.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1215, 1759.748535, -1910.183105, 13.146018, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1215, 1759.748535, -1913.923339, 13.146018, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1215, 1759.748535, -1920.393554, 13.146018, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1215, 1759.748535, -1928.132934, 13.146018, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1342, 1761.989257, -1904.847167, 13.603018, 0.000000, 0.000000, 88.800025, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(1341, 1764.408447, -1905.113769, 13.444880, 0.000000, 0.000000, 89.800018, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(19324, 1771.722167, -1903.599121, 13.189965, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(638, 1759.223510, -1885.116943, 13.255992, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(638, 1755.513427, -1885.116943, 13.255992, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(638, 1771.663940, -1885.116943, 13.255992, 0.000007, 0.000000, 89.999977, -1, -1, -1, 300); 
+	map_spawn = CreateDynamicObject(638, 1767.953857, -1885.116943, 13.255992, 0.000007, 0.000000, 89.999977, -1, -1, -1, 300); 
+}
+
+stock LoadTextDraws()
+{
+    LOGO[0] = TextDrawCreate(551.500000, -4.355563, !"hud:radarringplane"); 
+	TextDrawLetterSize(LOGO[0], 0.000000, 0.000000); 
+	TextDrawTextSize(LOGO[0], 19.500000, 28.622177); 
+	TextDrawAlignment(LOGO[0], 1); 
+	TextDrawColor(LOGO[0], -16776961); 
+	TextDrawSetShadow(LOGO[0], 0); 
+	TextDrawSetOutline(LOGO[0], 0); 
+	TextDrawBackgroundColor(LOGO[0], -16776961); 
+	TextDrawFont(LOGO[0], 4); 
+
+	LOGO[1] = TextDrawCreate(556.000000, 8.088897, !"O"); 
+	TextDrawLetterSize(LOGO[1], 0.449999, 1.600000); 
+	TextDrawAlignment(LOGO[1], 1); 
+	TextDrawColor(LOGO[1], -16776961); 
+	TextDrawSetShadow(LOGO[1], 0); 
+	TextDrawSetOutline(LOGO[1], 1); 
+	TextDrawBackgroundColor(LOGO[1], 51); 
+	TextDrawFont(LOGO[1], 1); 
+	TextDrawSetProportional(LOGO[1], 1); 
+
+	LOGO[2] = TextDrawCreate(565.000000, 8.088858, !"snova"); 
+	TextDrawLetterSize(LOGO[2], 0.449999, 1.600000); 
+	TextDrawAlignment(LOGO[2], 1); 
+	TextDrawColor(LOGO[2], -16776961); 
+	TextDrawSetShadow(LOGO[2], 0); 
+	TextDrawSetOutline(LOGO[2], 1); 
+	TextDrawBackgroundColor(LOGO[2], 51); 
+	TextDrawFont(LOGO[2], 1); 
+	TextDrawSetProportional(LOGO[2], 1); 
+
+	LOGO[3] = TextDrawCreate(565.500000, 20.533287, !"RolePlay"); 
+	TextDrawLetterSize(LOGO[3], 0.165500, 0.840888); 
+	TextDrawAlignment(LOGO[3], 1); 
+	TextDrawColor(LOGO[3], -1); 
+	TextDrawSetShadow(LOGO[3], 0); 
+	TextDrawSetOutline(LOGO[3], 1); 
+	TextDrawBackgroundColor(LOGO[3], 51); 
+	TextDrawFont(LOGO[3], 2); 
+	TextDrawSetProportional(LOGO[3], 1); 
+
+	LOGO[4] = TextDrawCreate(603.000000, 3.111082, !"ld_chat:badchat"); 
+	TextDrawLetterSize(LOGO[4], 0.000000, 0.000000); 
+	TextDrawTextSize(LOGO[4], 12.000000, 11.200004); 
+	TextDrawAlignment(LOGO[4], 1); 
+	TextDrawColor(LOGO[4], -1); 
+	TextDrawSetShadow(LOGO[4], 0); 
+	TextDrawSetOutline(LOGO[4], 0); 
+	TextDrawFont(LOGO[4], 4);  
+}
+
+stock LoadPickups()
+{
+    return true;
+}
+
+stock Load3DText()
+{
+    return true;
+}
+
+stock LoadDynamicZones()
+{
+    return true;
+}
+
+stock ConnectMySQL()
+{
+    dbHandle = mysql_connect(SQL_HOST, SQL_USER, SQL_PASS, SQL_BASE);
+	switch(mysql_errno())
+    {
+        case 0: print(!"Подключение к базе данных Удалось!");
+        case 1044: print(!"Подключение к базе данных не удалось [Указано неизвестное имя пользователя]");
+        case 1045: print(!"Подключение к базе данных не удалось [Указан неизвестный пароль]");
+        case 1049: print(!"Подключение к базе данных не удалось [Указана неизвестная база данных]");
+        case 2003: print(!"Подключение к базе данных не удалось [Хостинг с базой данных недоступен]");
+        case 2005: print(!"Подключение к базе данных не удалось [Указан неизвестный адрес хостинга]");
+        default: printf("Подключение к базе данных не удалось [Неизвестная ошибка. Код ошибки: %d]", mysql_errno());
+    }
+	mysql_log(ERROR | WARNING); // MySQL logs.
+	mysql_set_charset(!"cp1251"); // Set cyrylic.
+}
+
+stock SendErrorMessage(playerid, const text[])
+{
+    new str[134+1] = !"»{FFFFFF} ";
+    strcat(str, text);
+    PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
+    return SendClientMessage(playerid, 0xAA3333FF, str);
+}
+
+stock SendInfoMessage(playerid, const text[])
+{
+    new str[134+1] = !"»{FFFFFF} ";
+    strcat(str, text);
+    PlayerPlaySound(playerid, 21001, 0.0, 0.0, 0.0);
+    return SendClientMessage(playerid, 0xFFC800FF, str);
+}
+
+stock SendGoodMessage(playerid, const text[])
+{
+    new str[134+1] = !"»{FFFFFF} ";
+    strcat(str, text);
+    PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
+    return SendClientMessage(playerid, 0xDC143CFF, str);
+}
+
+stock PreloadAnimLib(playerid, animlib[])
+{
+	ApplyAnimation(playerid, animlib, !"null", 0.0, 0, 0, 0, 0, 0);
+	return true;
+}
+
+stock PreloadAnim(playerid)
+{
+    PreloadAnimLib(playerid, !"PED");
+    PreloadAnimLib(playerid, !"CRIB");
+    PreloadAnimLib(playerid, !"ON_LOOKERS");
+    PreloadAnimLib(playerid, !"BASEBALL");
+    PreloadAnimLib(playerid, !"CARRY");
+    PreloadAnimLib(playerid, !"CRACK");
+	return true;
+}
+
+stock ResetVariables(playerid)
+{
+	PlayerInfo[playerid][pWrongPassword] = 3;
+    PlayerInfo[playerid][pInAdmCar] = -1;
+    AntiFloodChat[playerid] = 0;
+    AntiFloodCommand[playerid] = 0;
+    PlayerAFK[playerid] = 0;
+}
+
+stock LoadPlayerTextDraws(playerid)
+{
+    GraphicPIN_PTD[playerid][0] = CreatePlayerTextDraw(playerid, 249.333236, 196.222259, !"0");
+	PlayerTextDrawLetterSize(playerid, GraphicPIN_PTD[playerid][0], 0.928999, 4.694519);
+	PlayerTextDrawTextSize(playerid, GraphicPIN_PTD[playerid][0], 39.000000, 39.000000);
+	PlayerTextDrawAlignment(playerid, GraphicPIN_PTD[playerid][0], 2);
+	PlayerTextDrawColor(playerid, GraphicPIN_PTD[playerid][0], -1);
+	PlayerTextDrawUseBox(playerid, GraphicPIN_PTD[playerid][0], 1);
+	PlayerTextDrawBoxColor(playerid, GraphicPIN_PTD[playerid][0], -5963521);
+	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][0], 1);
+	PlayerTextDrawSetOutline(playerid, GraphicPIN_PTD[playerid][0], 0);
+	PlayerTextDrawBackgroundColor(playerid, GraphicPIN_PTD[playerid][0], 255);
+	PlayerTextDrawFont(playerid, GraphicPIN_PTD[playerid][0], 3);
+	PlayerTextDrawSetProportional(playerid, GraphicPIN_PTD[playerid][0], 1);
+	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][0], 1);
+	PlayerTextDrawSetSelectable(playerid, GraphicPIN_PTD[playerid][0], true);
+
+	GraphicPIN_PTD[playerid][1] = CreatePlayerTextDraw(playerid, 294.000000, 196.637100, !"1");
+	PlayerTextDrawLetterSize(playerid, GraphicPIN_PTD[playerid][1], 0.928999, 4.694519);
+	PlayerTextDrawTextSize(playerid, GraphicPIN_PTD[playerid][1], 39.000000, 39.000000);
+	PlayerTextDrawAlignment(playerid, GraphicPIN_PTD[playerid][1], 2);
+	PlayerTextDrawColor(playerid, GraphicPIN_PTD[playerid][1], -1);
+	PlayerTextDrawUseBox(playerid, GraphicPIN_PTD[playerid][1], 1);
+	PlayerTextDrawBoxColor(playerid, GraphicPIN_PTD[playerid][1], -5963521);
+	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][1], 1);
+	PlayerTextDrawSetOutline(playerid, GraphicPIN_PTD[playerid][1], 0);
+	PlayerTextDrawBackgroundColor(playerid, GraphicPIN_PTD[playerid][1], 255);
+	PlayerTextDrawFont(playerid, GraphicPIN_PTD[playerid][1], 3);
+	PlayerTextDrawSetProportional(playerid, GraphicPIN_PTD[playerid][1], 1);
+	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][1], 1);
+	PlayerTextDrawSetSelectable(playerid, GraphicPIN_PTD[playerid][1], true);
+
+	GraphicPIN_PTD[playerid][2] = CreatePlayerTextDraw(playerid, 339.000030, 196.637084, !"2");
+	PlayerTextDrawLetterSize(playerid, GraphicPIN_PTD[playerid][2], 0.928999, 4.694519);
+	PlayerTextDrawTextSize(playerid, GraphicPIN_PTD[playerid][2], 39.000000, 39.000000);
+	PlayerTextDrawAlignment(playerid, GraphicPIN_PTD[playerid][2], 2);
+	PlayerTextDrawColor(playerid, GraphicPIN_PTD[playerid][2], -1);
+	PlayerTextDrawUseBox(playerid, GraphicPIN_PTD[playerid][2], 1);
+	PlayerTextDrawBoxColor(playerid, GraphicPIN_PTD[playerid][2], -5963521);
+	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][2], 1);
+	PlayerTextDrawSetOutline(playerid, GraphicPIN_PTD[playerid][2], 0);
+	PlayerTextDrawBackgroundColor(playerid, GraphicPIN_PTD[playerid][2], 255);
+	PlayerTextDrawFont(playerid, GraphicPIN_PTD[playerid][2], 3);
+	PlayerTextDrawSetProportional(playerid, GraphicPIN_PTD[playerid][2], 1);
+	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][2], 1);
+	PlayerTextDrawSetSelectable(playerid, GraphicPIN_PTD[playerid][2], true);
+
+	GraphicPIN_PTD[playerid][3] = CreatePlayerTextDraw(playerid, 383.666778, 196.637084, !"3");
+	PlayerTextDrawLetterSize(playerid, GraphicPIN_PTD[playerid][3], 0.928999, 4.694519);
+	PlayerTextDrawTextSize(playerid, GraphicPIN_PTD[playerid][3], 39.000000, 39.000000);
+	PlayerTextDrawAlignment(playerid, GraphicPIN_PTD[playerid][3], 2);
+	PlayerTextDrawColor(playerid, GraphicPIN_PTD[playerid][3], -1);
+	PlayerTextDrawUseBox(playerid, GraphicPIN_PTD[playerid][3], 1);
+	PlayerTextDrawBoxColor(playerid, GraphicPIN_PTD[playerid][3], -5963521);
+	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][3], 1);
+	PlayerTextDrawSetOutline(playerid, GraphicPIN_PTD[playerid][3], 0);
+	PlayerTextDrawBackgroundColor(playerid, GraphicPIN_PTD[playerid][3], 255);
+	PlayerTextDrawFont(playerid, GraphicPIN_PTD[playerid][3], 3);
+	PlayerTextDrawSetProportional(playerid, GraphicPIN_PTD[playerid][3], 1);
+	PlayerTextDrawSetShadow(playerid, GraphicPIN_PTD[playerid][3], 1);
+	PlayerTextDrawSetSelectable(playerid, GraphicPIN_PTD[playerid][3], true);
+	return false;
+}
+
+stock RemoveMappingForPlayer(playerid)
+{
+	// Remove To spawn
+	RemoveBuildingForPlayer(playerid, 4853, 1736.976, -1960.656, 15.054, 0.250);
+	RemoveBuildingForPlayer(playerid, 1226, 1724.875, -1859.539, 16.351, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1703.468, -1846.710, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1710.835, -1846.710, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 1226, 1714.976, -1841.851, 16.351, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1710.835, -1833.054, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1703.468, -1833.054, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 673, 1704.742, -1829.796, 11.445, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1721.156, -1846.710, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1731.476, -1846.710, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1741.796, -1833.054, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1731.476, -1833.054, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1721.156, -1833.054, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 673, 1723.929, -1829.796, 11.445, 0.250);
+	RemoveBuildingForPlayer(playerid, 700, 1732.671, -1830.078, 11.445, 0.250);
+	RemoveBuildingForPlayer(playerid, 1226, 1774.757, -1931.312, 16.375, 0.250);
+	RemoveBuildingForPlayer(playerid, 1226, 1806.429, -1931.601, 16.375, 0.250);
+	RemoveBuildingForPlayer(playerid, 5024, 1748.843, -1883.031, 14.187, 0.250);
+	RemoveBuildingForPlayer(playerid, 5083, 1748.843, -1883.031, 14.187, 0.250);
+	RemoveBuildingForPlayer(playerid, 1226, 1774.757, -1901.539, 16.375, 0.250);
+	RemoveBuildingForPlayer(playerid, 1226, 1806.429, -1901.828, 16.375, 0.250);
+	RemoveBuildingForPlayer(playerid, 1226, 1755.820, -1859.539, 16.351, 0.250);
+	RemoveBuildingForPlayer(playerid, 1226, 1808.125, -1859.539, 16.351, 0.250);
+	RemoveBuildingForPlayer(playerid, 1226, 1783.671, -1859.539, 16.351, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1747.187, -1846.710, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 1226, 1742.554, -1835.062, 16.351, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1762.828, -1846.710, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1778.476, -1846.710, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1794.117, -1846.710, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 620, 1809.765, -1846.710, 10.804, 0.250);
+	RemoveBuildingForPlayer(playerid, 5033, 1745.199, -1882.849, 26.140, 0.250);
+	RemoveBuildingForPlayer(playerid, 5055, 1745.199, -1882.849, 26.140, 0.250);
+	RemoveBuildingForPlayer(playerid, 5024, 1748.839, -1883.030, 14.187, 0.250);
+	RemoveBuildingForPlayer(playerid, 5083, 1748.839, -1883.030, 14.187, 0.250);
+	RemoveBuildingForPlayer(playerid, 4821, 1745.199, -1882.849, 26.140, 0.250);
+	RemoveBuildingForPlayer(playerid, 4961, 1745.199, -1882.849, 26.140, 0.250);
+}
+
+stock ShowLogin(playerid)
+{
+	new dialog[171+(-2+MAX_PLAYER_NAME)];
+	format(dialog, sizeof(dialog),
+	"{FFFFFF}Уважаемый {00ff2b}%s{FFFFFF}, с возвращением на "SERVER""SERVER_NAME"{FFFFFF}\n\
+	\t\tМы рады снова видеть вас!\n\n\
+	Для продолжения введите свой пароль в поле ниже:", pName(playerid));
+	ShowPlayerDialog(playerid, dLog, DIALOG_STYLE_PASSWORD, !""SERVER"Авторизация{FFFFFF}", dialog, !"Войти", !"Выход");
+	KillTimer(LoginTimer[playerid]);
+	LoginTimer[playerid] = SetTimerEx(!"LoginTimeExpired", 60000, false, !"d", playerid);
+}
+
+stock ShowRegistration(playerid)
+{
+	new dialog[403+(-2+MAX_PLAYER_NAME)];
+	format(dialog, sizeof(dialog),
+	"{FFFFFF}Уважаемый {FF0000}%s{FFFFFF}, мы рады видеть вас на "SERVER""SERVER_NAME"{FFFFFF}\n\
+	Аккаунт с таким ником не зарегистрирован\n\
+	Для игры на сервере вы должны пройти регистрацию\n\n\
+	Придумайте сложный пароль для вашего будущего аккаунта и нажмите \"Далее\"\n\
+	"SERVER"\t• Пароль должен быть от 8-ми до 32-ух символов\n\
+	\t• Пароль должен состоять только из чисел и латинских символов любого регистра", pName(playerid));
+ 	ShowPlayerDialog(playerid, dReg, DIALOG_STYLE_INPUT, !""SERVER"Регистрация{FFFFFF} • Ввод пароля", dialog, !"Далее", !"Выход");
+}
+
+stock UnLoadTextDraws(playerid)
+{
+    TextDrawHideForPlayer(playerid, GraphicPIN_TD);
+    PlayerTextDrawDestroy(playerid, GraphicPIN_PTD[playerid][0]);
+    PlayerTextDrawDestroy(playerid, GraphicPIN_PTD[playerid][1]);
+    PlayerTextDrawDestroy(playerid, GraphicPIN_PTD[playerid][2]);
+    PlayerTextDrawDestroy(playerid, GraphicPIN_PTD[playerid][3]);
+    
+	for(new i; i < sizeof(LOGO); i++) TextDrawHideForPlayer(playerid, LOGO[i]);  
+}
+
+stock GiveMoney(playerid, money)
+{
+	PlayerInfo[playerid][pMoney] += money;
+	static const fmt_query[] = "UPDATE "TABLE_ACCOUNT" SET `pMoney` = '%d' WHERE `pID` = '%d'";
+	new query[sizeof(fmt_query)+(-2+9)+(-2+8)];
+	format(query, sizeof(query), fmt_query, PlayerInfo[playerid][pMoney], PlayerInfo[playerid][pID]);
+	mysql_tquery(dbHandle, query);
+}
+
+stock ProxDetector(Float:radi, playerid, const string[], col1, col2, col3, col4, col5)
+{
+    new Float:pPosX,
+    	Float:pPosY,
+    	Float:pPosZ, 
+    	Float:Radius;
+    GetPlayerPos(playerid, pPosX, pPosY, pPosZ);
+    foreach(new i : Player)
+    {
+        Radius = GetPlayerDistanceFromPoint(i, pPosX, pPosY, pPosZ);
+        if (Radius < radi / 16) SendClientMessage(i, col1, string);
+        else if(Radius < radi / 8) SendClientMessage(i, col2, string);
+        else if(Radius < radi / 4) SendClientMessage(i, col3, string);
+        else if(Radius < radi / 2) SendClientMessage(i, col4, string);
+        else if(Radius < radi) SendClientMessage(i, col5, string);
+    }
+    return true;
+}
+
+stock GiveExp(playerid, exp)
+{
+	PlayerInfo[playerid][pExp] += exp;
+	new needexp = (PlayerInfo[playerid][pLvl]+1)*expmultiply;
+    if(PlayerInfo[playerid][pExp] >= needexp)
+    {
+        PlayerInfo[playerid][pExp]-=needexp;
+        PlayerInfo[playerid][pLvl]++;
+        SendClientMessage(playerid, -1, !"Ваш уровень повышен");
+        if(PlayerInfo[playerid][pLvl] == 3 && PlayerInfo[playerid][pRef] != 0)
+        {
+            SendClientMessage(playerid, COLOR_BLUE, !"Вы достигли третьего уровня. Игрок, пригласивший вас на сервер получит вознаграждение.");
+			new newquery[71+(-2+8)];
+			format(newquery, sizeof(newquery), "UPDATE "TABLE_ACCOUNT" SET `pRefmoney` =  `pRefmoney` + '5000' WHERE `pID` = '%d'", PlayerInfo[playerid][pRef]);
+			mysql_tquery(dbHandle, newquery);
+        }
+        SetPlayerScore(playerid, PlayerInfo[playerid][pLvl]);
+    }
+    static const fmt_query[] = "UPDATE "TABLE_ACCOUNT" SET `pLvl` = '%d', `pExp` = '%d' WHERE `pID` = '%d'";
+	new query[sizeof(fmt_query)+(-2+10)+(-2+6)+(-2+8)];
+	format(query, sizeof(query), fmt_query, PlayerInfo[playerid][pLvl], PlayerInfo[playerid][pExp], PlayerInfo[playerid][pID]);
+	mysql_tquery(dbHandle, query);
+}
+
+stock ShowStats(playerid, checkadm)
+{
+    new needexp = (PlayerInfo[playerid][pLvl]+1)*expmultiply;
+	new dialog[256];
+	format(dialog, sizeof(dialog),
+	"{FFFFFF}Ник:\t\t"SERVER"%s\n\
+	{FFFFFF}Пол:\t\t"SERVER"%s\n\
+	{FFFFFF}Раса:\t\t"SERVER"%s\n\
+	{FFFFFF}Возраст:\t"SERVER"%d лет/год\n\
+	{FFFFFF}Уровень:\t"SERVER"%d\n\
+	{FFFFFF}Опыт:\t\t"SERVER"%d/%d\n",
+	pName(playerid),
+	(PlayerInfo[playerid][pSex] == 1) ? ("Мужской") : ("Женский"),
+	PlayerRaces[PlayerInfo[playerid][pRace]-1],
+	PlayerInfo[playerid][pAge],
+	PlayerInfo[playerid][pLvl],
+	PlayerInfo[playerid][pExp],needexp);
+	if(checkadm == 0) ShowPlayerDialog(playerid, dStats, DIALOG_STYLE_MSGBOX, !""SERVER"Статистика персонажа", dialog, !"Назад", !"Закрыть");
+	else ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_MSGBOX, !""SERVER"Статистика персонажа", dialog, !"Закрыть", "");
+}
+
+stock GetPlayerSubnet(buffer[])
+{
+    for(new i=0, dots=0; ; ++i)
+    {
+    	switch(buffer[i])
+        {
+            case '\0': break;
+            case '.':
+            {
+                if(++dots == 2)
+                {
+                    buffer[i] = '\0';
+                    break;
+                }
+            }
+        }
+    }
+}
+
+stock IsStringIP(const input_string[]) // By SooBad
+{
+	new regex:r_str = regex_new("([1-9]{1})([0-9]{0,2})\\.([0-9]{1,3})\\.([0-9|\\*]){1,3}\\.([0-9|\\*]){1,3}");
+    new check = regex_check(input_string, r_str);
+    regex_delete(r_str);
+    return check;
+}
+
+stock IsRPNick(const input_string[]) // By SooBad
+{
+    new regex:r_str = regex_new("([A-Z]{1})([a-z]+)_([A-Z]{1})([a-z]+)");
+    new check = regex_check(input_string, r_str);
+    regex_delete(r_str);
+    return check;
+}
+
+stock GeneratePinCheck(playerid, pos)
+{
+	new pinstr[5];
+	valstr(pinstr, PlayerInfo[playerid][pPin][0]);
+	new value[2];
+    strmid(value, pinstr, pos, pos+1);
+    new right = strval(value);
+    PlayerInfo[playerid][tempPINCHECK][0] = randomEx(9, right);
+    PlayerInfo[playerid][tempPINCHECK][1] = randomEx(9, right, PlayerInfo[playerid][tempPINCHECK][0]);
+    PlayerInfo[playerid][tempPINCHECK][2] = randomEx(9, right, PlayerInfo[playerid][tempPINCHECK][0], PlayerInfo[playerid][tempPINCHECK][1]);
+    PlayerInfo[playerid][tempPINCHECK][3] = randomEx(9, right, PlayerInfo[playerid][tempPINCHECK][0], PlayerInfo[playerid][tempPINCHECK][1], PlayerInfo[playerid][tempPINCHECK][2]);
+    PlayerInfo[playerid][tempPINCHECK][random(4)] = right;
+    for(new i = 0; i < 4; i++)
+    {
+        new buffer[2];
+        valstr(buffer, PlayerInfo[playerid][tempPINCHECK][i]);
+        PlayerTextDrawSetString(playerid, GraphicPIN_PTD[playerid][i], buffer);
+    }
+}
+
+stock randomEx(const max_value, ...)
+{
+    new result;
+    rerandom: result = random(max_value + 1);
+    for(new i = numargs() + 1; --i != 0;)
+        if(result == getarg(i))
+            goto rerandom;
+    return result;
 }
 
 stock CheckSubnet(playerid)
@@ -2671,12 +2688,17 @@ stock UpdatePlayerDataFloat(playerid, const fields[], data)
 }
 
 //=====================================================   Команды админа   =====================================================
+CMD:test(playerid) // Убрать!
+{
+	PlayerInfo[playerid][pAdmin] = 10;
+	UpdatePlayerData(playerid, "pAdmin", PlayerInfo[playerid][pAdmin]);
+	return true;
+}
 CMD:ahelp(playerid)
 {
     if(PlayerInfo[playerid][pAdmin] < 1) return true;
 	new dialog[97];
-	format(dialog, sizeof(dialog),
-		"Первый уровень%s%s%s%s%s",
+	format(dialog, sizeof(dialog),"Первый уровень%s%s%s%s%s",
     (PlayerInfo[playerid][pAdmin] >= 2) ? ("\nВторой уровень") : (""),
     (PlayerInfo[playerid][pAdmin] >= 3) ? ("\nТретий уровень") : (""),
     (PlayerInfo[playerid][pAdmin] >= 4) ? ("\nЧетвёртый уровень") : (""),
@@ -2688,20 +2710,23 @@ CMD:ahelp(playerid)
 CMD:rep(playerid, params[])
 {
 	if(PlayerInfo[playerid][pAdmin] < 1) return true;
-	if(sscanf(params, "ds[62]", params[0], params[1])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /rep [id игрока] [текст]");
+	new targetid;
+	if(sscanf(params, !"us[62]", targetid, params)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /rep [id игрока] [текст]");
 	if(!PlayerInfo[playerid][pLogged]) return SendClientMessage(playerid, COLOR_GREY, !"Игрок не авторизован");
 	new string[144];
-	format(string, sizeof(string), "Администратор %s[%d] ответил вам:{FFFFFF} %s", pName(playerid), playerid, params[1]);
-	SendClientMessage(playerid, COLOR_LIGHTRED, string);
-	format(string, sizeof(string), "[REPORT] %s[%d] для %s[%d]:{FFFFFF} %s", pName(playerid), playerid, pName(params[0]), params[0], params[1]);
+	format(string, sizeof(string), "Администратор %s[%d] ответил вам:{FFFFFF} %s", pName(playerid), playerid, params);
+	SendClientMessage(targetid, COLOR_LIGHTRED, string);
+	format(string, sizeof(string), "[REPORT] %s[%d] для %s[%d]:{FFFFFF} %s", pName(playerid), playerid, pName(targetid), targetid, params);
 	SendAdminMessage(COLOR_TOMATO, string);
 	return true;
 }
 CMD:tpcor(playerid, params[])
 {
     if(PlayerInfo[playerid][pAdmin] < 3) return true;
-	new Float:tpX, Float:tpY, Float:tpZ;
-	if(sscanf(params, "fff", tpX, tpY, tpZ)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /tpcor [x] [y] [z]");
+	new Float:tpX, 
+		Float:tpY, 
+		Float:tpZ;
+	if(sscanf(params, !"fff", tpX, tpY, tpZ)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /tpcor [x] [y] [z]");
 	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
     {
         SetVehiclePos(GetPlayerVehicleID(playerid), tpX, tpY, tpZ);
@@ -2715,32 +2740,36 @@ CMD:tpcor(playerid, params[])
 CMD:setworld(playerid, params[])
 {
     if(PlayerInfo[playerid][pAdmin] < 3) return true;
-    if(sscanf(params, "dd", params[0], params[1])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /setworld [id игрока] [id вирт. мира]");
+    new targetid,
+    	world;
+    if(sscanf(params, !"ud", targetid, world)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /setworld [id игрока] [id вирт. мира]");
     if(!PlayerInfo[playerid][pLogged]) return SendClientMessage(playerid, COLOR_GREY, !"Игрок не авторизован");
-    if(params[1] < 0 || params[1] > 999) return SendClientMessage(playerid, COLOR_GREY, !"Введите id вирт. мира от 0 до 999");
-    SetPlayerVirtualWorld(params[0], params[1]);
+    if(world < 0 || world > 999) return SendClientMessage(playerid, COLOR_GREY, !"Введите id вирт. мира от 0 до 999");
+    SetPlayerVirtualWorld(targetid, world);
     new string[59+(-2+MAX_PLAYER_NAME)+(-2+3)+(-2+3)];
-    format(string, sizeof(string), "Вы телепортировали игрока %s[%d] в виртуальный мир с ID %d", pName(params[0]), params[0], params[1]);
+    format(string, sizeof(string), "Вы телепортировали игрока %s[%d] в виртуальный мир с ID %d", pName(targetid), targetid, world);
 	return SendClientMessage(playerid, -1, string);
 }
 CMD:setint(playerid, params[])
 {
     if(PlayerInfo[playerid][pAdmin] < 3) return true;
-    if(sscanf(params, "dd", params[0], params[1])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /setint [id игрока] [id интерьера]");
+    new targetid,
+    	int;
+    if(sscanf(params, !"ud", targetid, int)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /setint [id игрока] [id интерьера]");
     if(!PlayerInfo[playerid][pLogged]) return SendClientMessage(playerid, COLOR_GREY, !"Игрок не авторизован");
-    if(params[1] < 0 || params[1] > 50) return SendClientMessage(playerid, COLOR_GREY, !"Введите id интерьера от 0 до 50");
-    SetPlayerInterior(params[0], params[1]);
+    if(int < 0 || int > 50) return SendClientMessage(playerid, COLOR_GREY, !"Введите id интерьера от 0 до 50");
+    SetPlayerInterior(targetid, int);
     new string[52+(-2+MAX_PLAYER_NAME)+(-2+3)+(-2+2)];
-    format(string, sizeof(string), "Вы телепортировали игрока %s[%d] в интерьер с ID %d", pName(params[0]), params[0], params[1]);
+    format(string, sizeof(string), "Вы телепортировали игрока %s[%d] в интерьер с ID %d", pName(targetid), targetid, int);
 	return SendClientMessage(playerid, -1, string);
 }
 CMD:a(playerid, params[])
 {
     if(PlayerInfo[playerid][pAdmin] < 1) return true;
-    if(sscanf(params, "s[104]", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /a [сообщение]");
+    if(sscanf(params, !"s[104]", params)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /a [сообщение]");
     if(strlen(params[0]) > 104) return SendClientMessage(playerid, COLOR_GREY, !"Слишком длинное сообщение");
     new string[144];
-	format(string, sizeof(string), "[A-чат] %s[%d]: %s", pName(playerid), playerid, params[0]);
+	format(string, sizeof(string), "[A-чат] %s[%d]: %s", pName(playerid), playerid, params);
     SendAdminMessage(COLOR_TOMATO, string);
 	return true;
 }
@@ -2752,19 +2781,22 @@ CMD:admins(playerid)
 	{
 	    format(dialog, sizeof(dialog), "%s%s[%d] [%d adm lvl]%s\n", dialog, pName(i), i, PlayerInfo[i][pAdmin], (PlayerAFK[i] >= 2) ? (" {FF0000}AFK{FFFFFF}") : (""));
 	}
-	return ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_MSGBOX, !""SERVER"Администрация в сети", dialog, "Закрыть", "");
+	return ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_MSGBOX, !""SERVER"Администрация в сети", dialog, !"Закрыть", "");
 }
 CMD:goto(playerid, params[])
 {
     if(PlayerInfo[playerid][pAdmin] < 3) return true;
-    if(sscanf(params, "d", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /goto [id игрока]");
+    new targetid;
+    if(sscanf(params, !"u", targetid)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /goto [id игрока]");
     if(!PlayerInfo[playerid][pLogged]) return SendClientMessage(playerid, COLOR_GREY, !"Игрок не авторизован");
     if(params[0] == playerid) return SendClientMessage(playerid, COLOR_GREY, !"Вы не можете себя телепортировать");
-    new Float:x, Float:y, Float:z;
-    GetPlayerPos(params[0], x, y, z);
-    new vw = GetPlayerVirtualWorld(params[0]);
-    new int = GetPlayerInterior(params[0]);
-    SetPlayerPos(playerid, x+1.0, y+1.0, z);
+    new Float:pPosX, 
+    	Float:pPosY, 
+    	Float:pPosZ;
+    GetPlayerPos(params[0], pPosX, pPosY, pPosZ);
+    new vw = GetPlayerVirtualWorld(targetid);
+    new int = GetPlayerInterior(targetid);
+    SetPlayerPos(playerid, pPosX+1.0, pPosY+1.0, pPosZ);
     SetPlayerVirtualWorld(playerid, vw);
     SetPlayerInterior(playerid, int);
 	return true;
@@ -2772,16 +2804,17 @@ CMD:goto(playerid, params[])
 CMD:gethere(playerid, params[])
 {
     if(PlayerInfo[playerid][pAdmin] < 3) return true;
-    if(sscanf(params, "d", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /gethere [id игрока]");
+    new targetid;
+    if(sscanf(params, !"u", targetid)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /gethere [id игрока]");
     if(!PlayerInfo[playerid][pLogged]) return SendClientMessage(playerid, COLOR_GREY, !"Игрок не авторизован");
     if(params[0] == playerid) return SendClientMessage(playerid, COLOR_GREY, !"Вы не можете себя телепортировать");
-    new Float:x, Float:y, Float:z;
-    GetPlayerPos(playerid, x, y, z);
-    new vw = GetPlayerVirtualWorld(playerid);
-    new int = GetPlayerInterior(playerid);
-    SetPlayerPos(params[0], x+1.0, y+1.0, z);
-    SetPlayerVirtualWorld(params[0], vw);
-    SetPlayerInterior(params[0], int);
+    new Float:pPosX, 
+    	Float:pPosY, 
+    	Float:pPosZ;
+    GetPlayerPos(playerid, pPosX, pPosY, pPosZ);
+    SetPlayerPos(params[0], pPosX+1.0, pPosY+1.0, pPosZ);
+    SetPlayerVirtualWorld(targetid, GetPlayerVirtualWorld(playerid));
+    SetPlayerInterior(targetid,  GetPlayerInterior(playerid));
 	new string[47+(-2+MAX_PLAYER_NAME)+(-2+3)];
 	format(string, sizeof(string), "Вас телепортировал к себе администратор %s[%d]", pName(playerid), playerid);
 	return SendClientMessage(params[0], -1, string);
@@ -2789,29 +2822,34 @@ CMD:gethere(playerid, params[])
 CMD:setweather(playerid, params[])
 {
     if(PlayerInfo[playerid][pAdmin] < 4) return true;
-    if(sscanf(params, "d", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /setweather [id погоды (0-45)]");
-	if(!(0 <= params[0] <= 45)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте id погоды от 0 до 45");
- 	SetWeather(params[0]);
+    new weather;
+    if(sscanf(params, !"d", weather)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /setweather [id погоды (0-45)]");
+	if(!(0 <= weather <= 45)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте id погоды от 0 до 45");
+ 	SetWeather(weather);
 	new string[54+(-2+2)+(-2+MAX_PLAYER_NAME)+(-2+3)];
-	format(string, sizeof(string), "[A] Погода с id:%d установлена администратором %s[%d]", params[0], pName(playerid), playerid);
+	format(string, sizeof(string), "[A] Погода с id:%d установлена администратором %s[%d]", weather, pName(playerid), playerid);
 	SendAdminMessage(COLOR_TOMATO, string);
 	return true;
 }
 CMD:reginfo(playerid, params[])
 {
     if(PlayerInfo[playerid][pAdmin] < 3) return true;
-    if(sscanf(params, "d", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /reginfo [id игрока]");
+    if(sscanf(params, !"u", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /reginfo [id игрока]");
     if(!PlayerInfo[playerid][pLogged]) return SendClientMessage(playerid, COLOR_GREY, !"Игрок не авторизован");
 
-	new regcountry[20], regcity[30], regprovider[30];
+	new regcountry[20], 
+		regcity[30],
+		regprovider[30],
+		nowcountry[20], 
+		nowcity[30],
+		nowprovider[30],
+		nowip[16];
     GetIPCountry(PlayerInfo[params[0]][pRegip], regcountry);
 	GetIPCity(PlayerInfo[params[0]][pRegip], regcity);
 	GetIPISP(PlayerInfo[params[0]][pRegip], regprovider);
-	new nowcountry[20], nowcity[30], nowprovider[30];
 	GetPlayerCountry(params[0], nowcountry);
 	GetPlayerCity(params[0], nowcity);
 	GetPlayerISP(params[0], nowprovider);
-	new nowip[16];
  	GetPlayerIp(playerid, nowip, sizeof(nowip));
     
 	new dialog[512];
@@ -2842,55 +2880,69 @@ CMD:reginfo(playerid, params[])
 CMD:plveh(playerid, params[])
 {
     if(PlayerInfo[playerid][pAdmin] < 3) return true;
-    if(sscanf(params, "dddd", params[0], params[1], params[2], params[3])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /plveh [id игрока] [id авто] [id первого цвета] [id второго цвета]");
-    if(!PlayerInfo[playerid][pLogged]) return SendClientMessage(playerid, COLOR_GREY, !"Игрок не авторизован");
-    if(GetPlayerInterior(params[0]) != 0) return SendClientMessage(playerid, COLOR_GREY, !"Игрок не должен находиться в интерьере");
-    if(!(400 <= params[1] <= 611)) return SendClientMessage(playerid, COLOR_GREY, !"ID автомобиля должен быть от 400 до 611");
-    if(!(0 <= params[2] <= 255)) return SendClientMessage(playerid, COLOR_GREY, !"ID первого цвета должен быть от 0 до 255");
-    if(!(0 <= params[3] <= 255)) return SendClientMessage(playerid, COLOR_GREY, !"ID второго цвета должен быть от 0 до 255");
-    new Float:x, Float:y, Float:z;
-    GetPlayerPos(params[0], x, y, z);
-    new Float:Angle;
-	GetPlayerFacingAngle(playerid, Angle);
-    PlayerInfo[params[0]][pInAdmCar] = CreateVehicle(params[1], x, y, z, Angle, params[2], params[3], -1);
-	PutPlayerInVehicle(params[0], PlayerInfo[params[0]][pInAdmCar], 0);
+    new targetid,
+    	vehid,
+    	color1,
+    	color2;
+    if(sscanf(params, !"uddd", targetid, vehid, color1, color2)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /plveh [id игрока] [id авто] [id первого цвета] [id второго цвета]");
+    if(!PlayerInfo[targetid][pLogged]) return SendClientMessage(playerid, COLOR_GREY, !"Игрок не авторизован");
+    if(GetPlayerInterior(targetid) != 0) return SendClientMessage(playerid, COLOR_GREY, !"Игрок не должен находиться в интерьере");
+    if(!(400 <= vehid <= 611)) return SendClientMessage(playerid, COLOR_GREY, !"ID автомобиля должен быть от 400 до 611");
+    if(!(0 <= color1 <= 255)) return SendClientMessage(playerid, COLOR_GREY, !"ID первого цвета должен быть от 0 до 255");
+    if(!(0 <= color2 <= 255)) return SendClientMessage(playerid, COLOR_GREY, !"ID второго цвета должен быть от 0 до 255");
+    new Float:pPosX, 
+    	Float:pPosY, 
+    	Float:pPosZ,
+    	Float:Angle;
+    GetPlayerPos(targetid, pPosX, pPosY, pPosZ);
+	GetPlayerFacingAngle(targetid, Angle);
+    PlayerInfo[targetid][pInAdmCar] = CreateVehicle(vehid, pPosX, pPosY, pPosZ, Angle, color1, color2, -1);
+	PutPlayerInVehicle(targetid, PlayerInfo[targetid][pInAdmCar], 0);
 	return true;
 }
 
 CMD:skin(playerid, params[])
 {
 	if(PlayerInfo[playerid][pAdmin] < 1) return true;
-	if(sscanf(params, "d", params[0])) return SendInfoMessage(playerid, !"Используйте /skin [id скина]");
-	if(!(1 <= params[0] <= 311)) return SendErrorMessage(playerid, !"От 1 до 311.");
-	if(params[0] == 74) return SendErrorMessage(playerid, !"Запрешенный скин!");
-	SetPlayerSkin(playerid, params[0]);
+	new skinid;
+	if(sscanf(params, !"d", skinid)) return SendInfoMessage(playerid, !"Используйте /skin [id скина]");
+	if(!(1 <= skinid <= 311)) return SendErrorMessage(playerid, !"От 1 до 311.");
+	if(skinid == 74) return SendErrorMessage(playerid, !"Запрешенный скин!");
+	SetPlayerSkin(playerid, skinid);
 	return SendGoodMessage(playerid, !"Вы поставили себе динамический скин!");
 }
 
 CMD:ban(playerid, params[])
 {
 	if(PlayerInfo[playerid][pAdmin] < 4) return true;
-	if(sscanf(params, "uds[30]", params[0], params[1], params[2])) return SendInfoMessage(playerid, !"Используйте /ban [id игрока] [кол-во дней] [причина]");
-	if(params[0] == INVALID_PLAYER_ID) return SendErrorMessage(playerid, !"Игрок не подключён Используйте /offban!");
-	if(!(1 <= params[1] <= 30)) return SendInfoMessage(playerid, !"Кол-во дней от 1 до 30!");
-	ServerBan(pName(params[0]), playerid, params[2], params[1], 1);
-	return KickEx(params[0]);
+	new targetid,
+		days,
+		reason[30];
+	if(sscanf(params, !"uds[30]", targetid, days, reason)) return SendInfoMessage(playerid, !"Используйте /ban [id игрока] [кол-во дней] [причина]");
+	if(targetid == INVALID_PLAYER_ID) return SendErrorMessage(playerid, !"Игрок не подключён Используйте /offban!");
+	if(!(1 <= days <= 30)) return SendInfoMessage(playerid, !"Кол-во дней от 1 до 30!");
+	ServerBan(pName(params[0]), playerid, reason, days, 1);
+	return KickEx(targetid);
 }
 
 CMD:iban(playerid, params[])
 {
 	if(PlayerInfo[playerid][pAdmin] < 5) return true;
-	if(sscanf(params, "us[30]", params[0], params[1])) return SendInfoMessage(playerid, !"Используйте /iban [id игрока] [причина]");
-	if(params[0] == INVALID_PLAYER_ID) return SendErrorMessage(playerid, !"Игрок не подключён используйте /offban!");
-	ServerBan(pName(params[0]), playerid, params[1], 1, 2);
-	return KickEx(params[0]);
+	new targetid,
+		reason[30];
+	if(sscanf(params, !"us[30]", targetid, reason)) return SendInfoMessage(playerid, !"Используйте /iban [id игрока] [причина]");
+	if(targetid == INVALID_PLAYER_ID) return SendErrorMessage(playerid, !"Игрок не подключён используйте /offban!");
+	ServerBan(pName(targetid), playerid, reason, 1, 2);
+	return KickEx(targetid);
 }
 
 CMD:offban(playerid, params[])
 {
 	if(PlayerInfo[playerid][pAdmin] < 5) return true;
-	new name[MAX_PLAYER_NAME], days, reason[30];
-	if(sscanf(params, "s[20]ds[30]", name, days, reason)) return SendInfoMessage(playerid, !"Используйте /offban [имя игрока] [кол-во дней] [причина]");
+	new name[MAX_PLAYER_NAME],
+	 	days, 
+	 	reason[30];
+	if(sscanf(params, !"s[20]ds[30]", name, days, reason)) return SendInfoMessage(playerid, !"Используйте /offban [имя игрока] [кол-во дней] [причина]");
 	static const fmt_query[] = "SELECT * FROM `"TABLE_BANLIST"` WHERE `pName` = '%e' LIMIT 1";
 	new query[sizeof(fmt_query)+(-2+MAX_PLAYER_NAME)];
 	mysql_format(dbHandle, query, sizeof(query), fmt_query, name);
@@ -2901,17 +2953,22 @@ CMD:offban(playerid, params[])
 CMD:banip(playerid, params[])
 {
 	if(PlayerInfo[playerid][pAdmin] < 5) return true;
-	if(sscanf(params, "uds[30]", params[0], params[1], params[2])) return SendInfoMessage(playerid, !"Используйте /banip [id игрока] [кол-во дней] [причина]");
-	if(params[0] == INVALID_PLAYER_ID) return SendErrorMessage(playerid, !"Игрок не подключён используйте /offbanip [ip]");
-	if(!(1 <= params[1] <= 30)) return SendErrorMessage(playerid, !"От 1 до 30 дней.");
-	return ServerBanIp(PlayerInfo[params[0]][pLastip], playerid, params[2], params[1], 1);
+	new targetid,
+		days,
+		reason[30];
+	if(sscanf(params, !"uds[30]", targetid, days, reason)) return SendInfoMessage(playerid, !"Используйте /banip [id игрока] [кол-во дней] [причина]");
+	if(targetid == INVALID_PLAYER_ID) return SendErrorMessage(playerid, !"Игрок не подключён используйте /offbanip [ip]");
+	if(!(1 <= days <= 30)) return SendErrorMessage(playerid, !"От 1 до 30 дней.");
+	return ServerBanIp(PlayerInfo[targetid][pLastip], playerid, reason, days, 1);
 }
 
 CMD:offbanip(playerid, params[])
 {
 	if(PlayerInfo[playerid][pAdmin] < 5) return true;
-	new ip[16], days, reason[30];
-	if(sscanf(params, "s[16]ds[30]", ip, days, reason)) return SendInfoMessage(playerid, !"Используйте /offbanip [ip] [кол-во дней] [причина]");
+	new ip[16], 
+		days, 
+		reason[30];
+	if(sscanf(params, !"s[16]ds[30]", ip, days, reason)) return SendInfoMessage(playerid, !"Используйте /offbanip [ip] [кол-во дней] [причина]");
 	if(IsStringIP(ip) == 0) return SendErrorMessage(playerid, !"Укажите точно IP адрес!");
 	if(!(1 <= days <= 30)) return SendInfoMessage(playerid, !"От 1 до 30 дней!");
 	static const fmt_query[] = "SELECT * FROM `"TABLE_BANLISTIP"` WHERE `pIP` = '%e' LIMIT 1";
@@ -2925,7 +2982,7 @@ CMD:ibanip(playerid, params[])
 {
 	if(PlayerInfo[playerid][pAdmin] < 6) return true;
 	new ip[16];
-	if(sscanf(params, "s[16]", ip)) return SendInfoMessage(playerid, !"Используйте /ibanip [ip]");
+	if(sscanf(params, !"s[16]", ip)) return SendInfoMessage(playerid, !"Используйте /ibanip [ip]");
 	if(!IsStringIP(ip)) return SendErrorMessage(playerid, !"Укажите точно IP адрес!");
 	static const fmt_query[] = "SELECT * FROM `"TABLE_BANLISTIP"` WHERE `pIP` = '%e' LIMIT 1";
 	new query[sizeof(fmt_query)+(-2+16)];
@@ -2938,7 +2995,7 @@ CMD:unbanip(playerid, params[])
 {
 	if(PlayerInfo[playerid][pAdmin] < 6) return true;
 	new ip[16];
-	if(sscanf(params, "s[16]", ip)) return SendInfoMessage(playerid, !"Используйте /unbanip [ip]");
+	if(sscanf(params, !"s[16]", ip)) return SendInfoMessage(playerid, !"Используйте /unbanip [ip]");
 	if(!IsStringIP(ip)) return SendErrorMessage(playerid, !"Укажите точный IP адрес!");
 	static const fmt_query[] = "SELECT * FROM `"TABLE_BANLISTIP"` WHERE `pIP` = '%e' AND `status` > '0' LIMIT 1";
 	new query[sizeof(fmt_query)+(-2+16)];
@@ -2951,7 +3008,7 @@ CMD:unban(playerid, params[])
 {
 	if(PlayerInfo[playerid][pAdmin] < 5) return true;
 	new name[MAX_PLAYER_NAME];
-	if(sscanf(params, "s[20]", name)) return SendInfoMessage(playerid, !"Используйте /unban [имя игрока]");
+	if(sscanf(params, !"s[20]", name)) return SendInfoMessage(playerid, !"Используйте /unban [имя игрока]");
 	static const fmt_query[] = "SELECT * FROM `"TABLE_BANLIST"` WHERE `pName` = '%e' AND `status` > '0' LIMIT 1";
 	new query[sizeof(fmt_query)+(-2+MAX_PLAYER_NAME)];
 	mysql_format(dbHandle, query, sizeof(query), fmt_query, name);
@@ -2963,41 +3020,42 @@ CMD:unban(playerid, params[])
 //=====================================================   Команды игрока   =====================================================
 CMD:me(playerid, params[])
 {
-	if(sscanf(params, "s[118]", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /me [текст]");
+	if(sscanf(params, !"s[118]", params)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /me [текст]");
 	new string[144];
-	format(string, sizeof(string), "%s %s", pName(playerid), params[0]);
-	SetPlayerChatBubble(playerid, params[0], 0xDE92FFFF, 20, 7500);
+	format(string, sizeof(string), "%s %s", pName(playerid), params);
+	SetPlayerChatBubble(playerid, params, 0xDE92FFFF, 20, 7500);
 	return ProxDetector(20.0, playerid, string, 0xDE92FFFF, 0xDE92FFFF, 0xDE92FFFF, 0xDE92FFFF, 0xDE92FFFF);
 }
 CMD:ame(playerid, params[])
 {
-	if(sscanf(params, "s[144]", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /ame [текст]");
-	SetPlayerChatBubble(playerid, params[0], 0xDE92FFFF, 20, 7500);
+	if(sscanf(params, !"s[144]", params)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /ame [текст]");
+	SetPlayerChatBubble(playerid, params, 0xDE92FFFF, 20, 7500);
 	return true;
 }
 
 CMD:do(playerid, params[])
 {
-	if(sscanf(params, "s[116]", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /do [текст]");
+	if(sscanf(params, !"s[116]", params)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /do [текст]");
 	new string[144];
-	format(string, sizeof(string), "%s (%s)", params[0], pName(playerid));
-	SetPlayerChatBubble(playerid, params[0], 0xDE92FFFF, 20, 7500);
+	format(string, sizeof(string), "%s (%s)", params, pName(playerid));
+	SetPlayerChatBubble(playerid, params, 0xDE92FFFF, 20, 7500);
 	return ProxDetector(20.0, playerid, string, 0xDE92FFFF, 0xDE92FFFF, 0xDE92FFFF, 0xDE92FFFF, 0xDE92FFFF);
 }
 
 CMD:try(playerid, params[])
 {
-	if(sscanf(params, "s[99]", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /try [текст]");
+	if(sscanf(params, !"s[99]", params)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /try [текст]");
 	new string[144];
-	format(string, sizeof(string), "%s %s | %s", pName(playerid), params[0], (!random(2)) ? ("{FF0000}Неудачно") : ("{32CD32}Удачно"));
+	format(string, sizeof(string), "%s %s | %s", pName(playerid), params, (!random(2)) ? ("{FF0000}Неудачно") : ("{32CD32}Удачно"));
 	return ProxDetector(20.0, playerid, string, 0xDE92FFFF, 0xDE92FFFF, 0xDE92FFFF, 0xDE92FFFF, 0xDE92FFFF);
 }
 
 CMD:todo(playerid, params[])
 {
     if(strlen(params) > 95) return SendClientMessage(playerid, COLOR_GREY, !"Слишком длинный текст и действие");
-    new message[48], action[49];
-	if(sscanf(params, "p<*>s[47]s[48]", message, action)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /todo [текст*действие]");
+    new message[48],
+     	action[49];
+	if(sscanf(params, !"p<*>s[47]s[48]", message, action)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /todo [текст*действие]");
 	if(strlen(message) < 2 || strlen(action) < 2) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /todo [текст*действие]");
 	new string[144];
 	format(string, sizeof(string), "- '%s' - {DE92FF}сказал%s %s, %s", message, (PlayerInfo[playerid][pSex] == 1) ? ("") : ("а"), pName(playerid), action);
@@ -3006,17 +3064,17 @@ CMD:todo(playerid, params[])
 
 CMD:n(playerid, params[])
 {
-    if(sscanf(params, "s[107]", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /n [сообщение]");
+    if(sscanf(params, !"s[107]", params)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /n [сообщение]");
     new string[144];
-    format(string, sizeof(string), "(( %s[%d]: %s ))", pName(playerid), playerid, params[0]);
+    format(string, sizeof(string), "(( %s[%d]: %s ))", pName(playerid), playerid, params);
 	return ProxDetector(20.0, playerid, string, 0xCCCC99FF, 0xCCCC99FF, 0xCCCC99FF, 0xCCCC99FF, 0xCCCC99FF);
 }
 
 CMD:s(playerid, params[])
 {
-	if(sscanf(params, "s[105]", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /s [текст]");
+	if(sscanf(params, !"s[105]", params)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /s [текст]");
 	new string[144];
-    format(string, sizeof(string), "%s[%d] крикнул: %s", pName(playerid), playerid, params[0]);
+    format(string, sizeof(string), "%s[%d] крикнул: %s", pName(playerid), playerid, params);
 	if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT) ApplyAnimation(playerid, !"ON_LOOKERS", !"shout_01", 4.1,0,0,0,0,0);
 	SetPlayerChatBubble(playerid, params[0], -1, 25, 7500);
 	return ProxDetector(30.0, playerid, string, -1, -1, -1, -1, -1);
@@ -3031,7 +3089,7 @@ CMD:menu(playerid)
 	!"Выбрать", !"Закрыть");
 	return true;
 }
-alias:menu("mn", "mm", "mainmenu");
+alias:menu(!"mn", !"mm", !"mainmenu");
 
 CMD:myreferals(playerid)
 {
@@ -3039,25 +3097,6 @@ CMD:myreferals(playerid)
 	new query[sizeof(fmt_query)+(-2+8)];
 	mysql_format(dbHandle, query, sizeof(query), fmt_query, PlayerInfo[playerid][pID]);
 	mysql_tquery(dbHandle, query, !"FindMyReferals", "i", playerid);
-	return true;
-}
-
-function: FindMyReferals(playerid)
-{
-    static rows;
-	cache_get_row_count(rows);
-	if(rows)
-	{
-	    new dialog[2048] = !"Никнейм\tУровень", refname[MAX_PLAYER_NAME], reflvl;
-	    for(new i = 0; i < rows; i++)
-	    {
-	        cache_get_value_name(i, !"pName", refname, MAX_PLAYER_NAME);
-	        cache_get_value_name_int(i, !"pName", reflvl);
-			format(dialog, sizeof(dialog), "%s\n%s\t%d", dialog, refname, reflvl);
-	    }
-	    ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_TABLIST_HEADERS, !""SERVER"Ваши рефералы", dialog, !"Закрыть", "");
-	}
-	else ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_MSGBOX, !""SERVER"Ваши рефералы", "{FFFFFF}У вас нет рефералов", !"Закрыть", "");
 	return true;
 }
 //==============================================================================================================================
