@@ -35,6 +35,7 @@ main()
 #include <foreach>
 #include <Pawn.Regex>
 #include <TOTP>
+#include <a_http>
 #include <geolocation> // В следущем обновление обновлю систему.
 #include <nex-ac> // Anti Cheat
 #include <SKY> // Для работы с W-C
@@ -339,11 +340,21 @@ public OnPlayerText(playerid, text[])
 
 public OnPlayerCommandText(playerid, cmdtext[])
 {
+	if(!PlayerInfo[playerid][pLogged])
+	{
+	    SendErrorMessage(playerid, !"Для игры на сервере вы должны авторизоваться!");
+		return KickEx(playerid);
+	}
 	return false;
 }
 
 public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
 {
+	if(!PlayerInfo[playerid][pLogged])
+	{
+	    SendErrorMessage(playerid, !"Для игры на сервере вы должны авторизоваться!");
+		return KickEx(playerid);
+	}
 	return true;
 }
 
@@ -367,13 +378,19 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 
 public OnPlayerDamage(&playerid, &Float:amount, &issuerid, &weapon, &bodypart)
 {
-	if(!PlayerInfo[playerid][pLogged]) return KickEx(issuerid);
+	if(!PlayerInfo[issuerid][pLogged]) return KickEx(issuerid);
+	if(PlayerAFK[playerid] >= 4) return false;
 	if(issuerid != INVALID_PLAYER_ID && playerid != INVALID_PLAYER_ID)
 	{
 		new string[5];
 		format(string, sizeof(string), "-%d", floatround(amount));
 		SetPlayerChatBubble(playerid, string, 0xFF6347AA, 15, 2500);
 	}
+	return true;
+}
+
+public OnPlayerDamageDone(playerid, Float:amount, issuerid, weapon, bodypart)
+{
 	return true;
 }
 
@@ -1233,7 +1250,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					{
 					    ShowPlayerDialog(playerid, dAhelpCMD, DIALOG_STYLE_MSGBOX, !""SERVER"Команды {FFFFFF}четвёртого уровня",
 						!""SERVER"/setweather{FFFFFF} - установить погоду на сервере\n\
-						"SERVER"/reginfo{FFFFFF} - сравнить регистрационные данные игрока с текущими\n\
+						"SERVER"/playerinfo{FFFFFF} - данные о игроке\n\
 						"SERVER"/ban{FFFFFF} - забанить игрока",
 						!"Назад", "Закрыть");
 					}
@@ -2492,6 +2509,7 @@ stock GiveExp(playerid, exp)
         PlayerInfo[playerid][pExp]-=needexp;
         PlayerInfo[playerid][pLvl]++;
         SendClientMessage(playerid, -1, !"Ваш уровень повышен");
+        UpdatePlayerData(playerid, "pLvl", PlayerInfo[playerid][pLvl]);
         if(PlayerInfo[playerid][pLvl] == 3 && PlayerInfo[playerid][pRef] != 0)
         {
             SendClientMessage(playerid, COLOR_BLUE, !"Вы достигли третьего уровня. Игрок, пригласивший вас на сервер получит вознаграждение.");
@@ -2501,10 +2519,7 @@ stock GiveExp(playerid, exp)
         }
         SetPlayerScore(playerid, PlayerInfo[playerid][pLvl]);
     }
-    static const fmt_query[] = "UPDATE "TABLE_ACCOUNT" SET `pLvl` = '%d', `pExp` = '%d' WHERE `pID` = '%d'";
-	new query[sizeof(fmt_query)+(-2+10)+(-2+6)+(-2+8)];
-	format(query, sizeof(query), fmt_query, PlayerInfo[playerid][pLvl], PlayerInfo[playerid][pExp], PlayerInfo[playerid][pID]);
-	mysql_tquery(dbHandle, query);
+    UpdatePlayerData(playerid, "pExp", PlayerInfo[playerid][pExp]);
 }
 
 stock ShowStats(playerid, checkadm)
@@ -2831,51 +2846,25 @@ CMD:setweather(playerid, params[])
 	SendAdminMessage(COLOR_TOMATO, string);
 	return true;
 }
-CMD:reginfo(playerid, params[])
+CMD:playerinfo(playerid, params[])
 {
     if(PlayerInfo[playerid][pAdmin] < 3) return true;
-    if(sscanf(params, !"u", params[0])) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /reginfo [id игрока]");
-    if(!PlayerInfo[playerid][pLogged]) return SendClientMessage(playerid, COLOR_GREY, !"Игрок не авторизован");
-
-	new regcountry[20], 
-		regcity[30],
-		regprovider[30],
-		nowcountry[20], 
-		nowcity[30],
-		nowprovider[30],
-		nowip[16];
-    GetIPCountry(PlayerInfo[params[0]][pRegip], regcountry);
-	GetIPCity(PlayerInfo[params[0]][pRegip], regcity);
-	GetIPISP(PlayerInfo[params[0]][pRegip], regprovider);
-	GetPlayerCountry(params[0], nowcountry);
-	GetPlayerCity(params[0], nowcity);
-	GetPlayerISP(params[0], nowprovider);
- 	GetPlayerIp(playerid, nowip, sizeof(nowip));
-    
-	new dialog[512];
-	format(dialog, sizeof(dialog),
-	"{FFFFFF}Проверка игрока: "SERVER"%s[%d]{FFFFFF}\n\n\
-	Дата при регистрации: %s\n\
-	IP при регистрации: %s\n\
-	Страна при регистрации: %s\n\
-	Город при регистрации: %s\n\
-	Провайдер при регистрации: %s\n\n\
-	Текущий IP: %s\n\
-	Текущая страна: %s\n\
-	Текущий город: %s\n\
-	Текущий провайдер: %s",
-	pName(params[0]), params[0],
-	PlayerInfo[params[0]][pRegdate],
-	PlayerInfo[params[0]][pRegip],
-	regcountry,
-	regcity,
-	regprovider,
-	nowip,
-	nowcountry,
-	nowcity,
-	nowprovider);
-	return ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_MSGBOX, !""SERVER"Сравнение регистрационных данных с текущими", dialog, !"Закрыть", "");
+    new targetid;
+    if(sscanf(params, !"u", targetid)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /playerinfo [id игрока]");
+    if(!PlayerInfo[targetid][pLogged]) return SendClientMessage(playerid, COLOR_GREY, !"Игрок не авторизован");
+    static const fmt_str[] = "\
+    {FFFFFF}Страна: "SERVER"%s\n\
+    {FFFFFF}Город: "SERVER"%s\n\
+    {FFFFFF}Провайдер: "SERVER"%s\n\
+    {FFFFFF}Прокси: "SERVER"%s";
+    new string[sizeof(fmt_str)+(-2+32)+(-2+32)+(-2+32)+(-2+6)];
+    format(string, sizeof(string), fmt_str, GetPlayerCountry(targetid),
+	GetPlayerCity(targetid),
+	GetPlayerProvider(targetid),
+	GetPlayerProxyStatus(targetid));
+	return ShowPlayerDialog(playerid, dNone, DIALOG_STYLE_MSGBOX, !""SERVER"Reg Info", string, !"Закрыть", "");
 }
+alias:playerinfo("getpi");
 
 CMD:plveh(playerid, params[])
 {
@@ -3015,6 +3004,45 @@ CMD:unban(playerid, params[])
 	mysql_tquery(dbHandle, query, !"UnBanPlayer", !"ds", playerid, name);
 	return true;
 }
+
+CMD:kick(playerid, params[])
+{
+	if(PlayerInfo[playerid][pAdmin] < 1) return true;
+	new targetid;
+	if(sscanf(params, !"us[30]", targetid, params)) return SendInfoMessage(playerid, !"Используйте /kick [ид игрока] [причина]");
+	if(targetid == playerid) return SendErrorMessage(playerid, !"Нельзя кикать самого себя!");
+	if(targetid == INVALID_PLAYER_ID) return SendErrorMessage(playerid, !"Игрок не подключён!");
+	new _day,
+		_month,
+		_year;
+	getdate(_year, _month, _day);
+	static const fmt_str[] = "\
+	{FFFFFF}Вы были кикнуты "SERVER"Администратором\n\
+	{FFFFFF}Ваш Ник-Нейм: "SERVER"%s\n\
+	{FFFFFF}Ник-Нейм Администратора: "SERVER"%s\n\
+	{FFFFFF}Причина кика: "SERVER"%s\n\
+	{FFFFFF}Дата кика: "SERVER"%d.%02d.%02d";
+	new string[sizeof(fmt_str)+(-2+MAX_PLAYER_NAME)+(-2+MAX_PLAYER_NAME)+(-2+30)+(-10+11)];
+	format(string, sizeof(string), fmt_str, pName(playerid), pName(targetid), params, _year, _month, _day);
+	ShowPlayerDialog(targetid, dNone, DIALOG_STYLE_MSGBOX, !""SERVER"Уведомление", string, !"Понял", " ");
+	KickEx(targetid);
+	format(string, sizeof(string), "Администратор %s[%d] кикнул %s. Причина: %s", pName(playerid), playerid, pName(targetid));
+	return SendClientMessageToAll(COLOR_TOMATO, string);
+}
+
+CMD:skick(playerid, params[])
+{
+	if(PlayerInfo[playerid][pAdmin] < 3) return true;
+	new targetid;
+	if(sscanf(params, !"u", targetid)) return SendInfoMessage(playerid, !"Используйте /skick [ид игрока]");
+	if(targetid == playerid) return SendErrorMessage(playerid, !"Нельзя кикать самого себя!");
+	if(targetid == INVALID_PLAYER_ID) return SendErrorMessage(playerid, !"Игрок не подключён!");
+	static const fmt_str[] = "Администратор %s[%d] тихо кикнул игрока %s.";
+	new string[sizeof(fmt_str)+(-2+MAX_PLAYER_NAME)+(-2+3)+(-2+MAX_PLAYER_NAME)];
+	format(string, sizeof(string), fmt_str, pName(playerid), playerid, pName(targetid));
+	SendAdminMessage(COLOR_GREY, string);
+	return KickEx(targetid);
+}
 //==============================================================================================================================
 
 //=====================================================   Команды игрока   =====================================================
@@ -3026,6 +3054,7 @@ CMD:me(playerid, params[])
 	SetPlayerChatBubble(playerid, params, 0xDE92FFFF, 20, 7500);
 	return ProxDetector(20.0, playerid, string, 0xDE92FFFF, 0xDE92FFFF, 0xDE92FFFF, 0xDE92FFFF, 0xDE92FFFF);
 }
+
 CMD:ame(playerid, params[])
 {
 	if(sscanf(params, !"s[144]", params)) return SendClientMessage(playerid, COLOR_GREY, !"Используйте /ame [текст]");
