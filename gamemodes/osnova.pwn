@@ -1226,7 +1226,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					    ShowPlayerDialog(playerid, dAhelpCMD, DIALOG_STYLE_MSGBOX, !""SERVER" оманды {FFFFFF}первого уровн€",
 						!""SERVER"/admins{FFFFFF} - посмотреть администрацию в сети\n\
 						"SERVER"/a{FFFFFF} - чат администрации\n\
-						"SERVER"/rep{FFFFFF} - ответить на жалобу",
+						"SERVER"/rep{FFFFFF} - ответить на жалобу\n\
+						"SERVER"/kick{FFFFFF} - кикнуть игрока",
 						!"Ќазад", "«акрыть");
 					}
 					case 1:
@@ -1243,7 +1244,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						"SERVER"/setworld{FFFFFF} - переместитьс€ в id вирт. мира\n\
 						"SERVER"/goto{FFFFFF} - телепортироватьс€ к игроку\n\
 						"SERVER"/gethere{FFFFFF} - телепортировать игрока к себе\n\
-						"SERVER"/plveh{FFFFFF} - выдать игроку автомобиль",
+						"SERVER"/plveh{FFFFFF} - выдать игроку автомобиль\n\
+						"SERVER"/skick{FFFFFF} - тихо кикнуть игрока",
 						!"Ќазад", "«акрыть");
 					}
 					case 3:
